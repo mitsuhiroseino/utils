@@ -1,4 +1,4 @@
-import sequence from 'src/utils/promise/sequence';
+import sequence from 'src/promise/sequence';
 
 describe('sequence', () => {
   test('default', () => {

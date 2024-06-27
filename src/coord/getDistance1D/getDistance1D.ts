@@ -1,4 +1,4 @@
-import clamp, { ClampOptions } from '../../number/clamp';
+import clamp, { CLAMP_MODE, ClampOptions } from '../../number/clamp';
 import ensureAccuracy from '../../number/ensureAccuracy';
 import getValidMinMax from '../../number/getValidMinMax';
 import { GetDistance1DOptions } from './types';
@@ -41,7 +41,7 @@ export default function getDistance1D(start: number, end: number, options: GetDi
  * @returns 始点から終点の距離
  */
 function _getLoopedDistance(start: number, end: number, min: number, max: number) {
-  const clampOptions: ClampOptions = { correctionType: 'loop' },
+  const clampOptions: ClampOptions = { minClampMode: CLAMP_MODE.WRAP, maxClampMode: CLAMP_MODE.WRAP },
     startValue = clamp(start, min, max, clampOptions),
     endValue = clamp(end, min, max, clampOptions),
     diff = endValue - startValue,

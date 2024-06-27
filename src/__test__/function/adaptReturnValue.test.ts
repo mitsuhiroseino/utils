@@ -1,4 +1,4 @@
-import adaptReturnValue from 'src/utils/function/adaptReturnValue';
+import adaptReturnValue from 'src/function/adaptReturnValue';
 
 describe('adaptReturnValue', () => {
   test('戻り値の差し替え', () => {

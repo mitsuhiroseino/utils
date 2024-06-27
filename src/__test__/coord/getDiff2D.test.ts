@@ -1,4 +1,4 @@
-import getDiff2D, { GetDiff2DOptions } from 'src/utils/coord/getDiff2D';
+import getDiff2D, { GetDiff2DOptions } from 'src/coord/getDiff2D';
 
 describe('getDiff2D', () => {
   describe('default', () => {

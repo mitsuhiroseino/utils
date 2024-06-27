@@ -1,6 +1,6 @@
 import isNumber from 'lodash/isNumber';
 import isString from 'lodash/isString';
-import equals, { COMPARE_MODE, IsSameOptions } from 'src/utils/lang/isSame';
+import equals, { COMPARE_MODE, IsSameOptions } from 'src/lang/isSame';
 
 describe('equal', () => {
   describe('default', () => {

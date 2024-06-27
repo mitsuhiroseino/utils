@@ -1,4 +1,4 @@
-import wait from 'src/utils/function/wait';
+import wait from 'src/function/wait';
 
 describe('wait', () => {
   test('100ms', () => {

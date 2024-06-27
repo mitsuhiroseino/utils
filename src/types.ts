@@ -14,16 +14,6 @@ export type AnyOptions = AnyObject<any>;
 export type Constructor<I = any> = new (...args: any[]) => I;
 
 /**
- * IDを持つ要素
- */
-export type IdentifiableItem = {
-  /**
-   * ID
-   */
-  $id: string;
-};
-
-/**
  * JSON.stringifyを利用する機能用のオプション
  */
 export type JsonStringifyOptions = {

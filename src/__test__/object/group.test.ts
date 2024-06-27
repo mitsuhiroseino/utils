@@ -1,4 +1,4 @@
-import group from 'src/utils/object/group';
+import group from 'src/object/group';
 
 describe('group', () => {
   const OBJECT = {

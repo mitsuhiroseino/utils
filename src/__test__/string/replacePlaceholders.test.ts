@@ -1,4 +1,4 @@
-import replacePlaceholders from 'src/utils/string/replacePlaceholders';
+import replacePlaceholders from 'src/string/replacePlaceholders';
 
 describe('replacePlaceholders', () => {
   test('置換(オブジェクト)', () => {

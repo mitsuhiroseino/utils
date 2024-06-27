@@ -1,4 +1,4 @@
-import replaceWithMap from 'src/utils/string/replaceWithMap';
+import replaceWithMap from 'src/string/replaceWithMap';
 
 describe('replaceWithMap', () => {
   test('置換', () => {

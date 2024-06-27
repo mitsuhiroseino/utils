@@ -1,4 +1,4 @@
-import capitalizeSimply from 'src/utils/string/capitalizeSimply';
+import capitalizeSimply from 'src/string/capitalizeSimply';
 
 describe('capitalizeSimply', () => {
   test('先頭小文字', () => {

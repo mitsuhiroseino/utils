@@ -1,4 +1,4 @@
-import sleep from 'src/utils/function/sleep';
+import sleep from 'src/function/sleep';
 
 describe('sleep', () => {
   test('100ms', () => {

@@ -1,4 +1,4 @@
-import isEmptyValue from 'src/utils/lang/isEmptyValue';
+import isEmptyValue from 'src/lang/isEmptyValue';
 
 describe('isEmptyValue', () => {
   describe('true', () => {

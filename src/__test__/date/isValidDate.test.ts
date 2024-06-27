@@ -1,4 +1,4 @@
-import isValidDate from 'src/utils/date/isValidDate';
+import isValidDate from 'src/date/isValidDate';
 
 describe('isValidDate', () => {
   test('正しい日付', () => {

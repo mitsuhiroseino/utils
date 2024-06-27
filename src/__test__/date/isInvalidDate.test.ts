@@ -1,4 +1,4 @@
-import isInvalidDate from 'src/utils/date/isInvalidDate';
+import isInvalidDate from 'src/date/isInvalidDate';
 
 describe('isInvalidDate', () => {
   test('正しい日付', () => {

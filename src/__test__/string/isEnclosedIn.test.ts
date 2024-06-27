@@ -1,4 +1,4 @@
-import isEnclosedIn from 'src/utils/string/isEnclosedIn';
+import isEnclosedIn from 'src/string/isEnclosedIn';
 
 describe('isEnclosedIn', () => {
   describe('prefix === suffix', () => {

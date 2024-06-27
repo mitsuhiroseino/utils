@@ -1,4 +1,4 @@
-import getDefined from 'src/utils/lang/getDefined';
+import getDefined from 'src/lang/getDefined';
 
 describe('getDefined', () => {
   describe('引数3件', () => {

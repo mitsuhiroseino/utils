@@ -1,4 +1,4 @@
-import createInsensitiveRecord from 'src/utils/object/createInsensitiveRecord';
+import createInsensitiveRecord from 'src/object/createInsensitiveRecord';
 
 describe('createInsensitiveRecord', () => {
   const target = {

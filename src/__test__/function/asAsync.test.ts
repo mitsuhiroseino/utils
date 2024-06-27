@@ -1,4 +1,4 @@
-import asAsync from 'src/utils/function/asAsync';
+import asAsync from 'src/function/asAsync';
 
 describe('asAsync', () => {
   test('待ちなし', async () => {

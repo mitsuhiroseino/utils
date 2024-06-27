@@ -1,4 +1,4 @@
-import hasOwnProperty from 'src/utils/object/hasOwnProperty';
+import hasOwnProperty from 'src/object/hasOwnProperty';
 
 describe('hasOwnProperty', () => {
   const OBJECT = {

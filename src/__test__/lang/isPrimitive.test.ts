@@ -1,4 +1,4 @@
-import isPrimitive from 'src/utils/lang/isPrimitive';
+import isPrimitive from 'src/lang/isPrimitive';
 
 describe('isPrimitive', () => {
   describe('true', () => {

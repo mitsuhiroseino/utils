@@ -1,4 +1,4 @@
-import toLiteral from 'src/utils/data/toLiteral';
+import toLiteral from 'src/data/toLiteral';
 
 describe('toLiteral', () => {
   const DATE = new Date(2000, 0, 1, 2, 3, 4, 567),

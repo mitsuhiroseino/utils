@@ -1,4 +1,4 @@
-import rotate from 'src/utils/array/rotate';
+import rotate from 'src/array/rotate';
 
 describe('rotate', () => {
   test('default(1件)', () => {

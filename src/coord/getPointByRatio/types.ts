@@ -1,4 +1,4 @@
-import { CorrectionType } from '../../number/clamp';
+import { ClampMode } from '../../number/clamp';
 import { CalcPathDistanceOptions } from '../calcPathDistance';
 import { CalcPathDistanceRatioResult } from '../calcPathDistanceRatio';
 
@@ -25,25 +25,25 @@ export type GetPointByRatioOptions = CalcPathDistanceOptions & {
 
   /**
    * X軸の値の範囲に制限がある場合の補正種別
-   * 未指定の場合は`clamp`
+   * 未指定の場合は`auto`
    */
-  correctionTypeX?: CorrectionType;
+  xClampMode?: ClampMode;
 
   /**
    * X軸の補正種別が`defalut`の場合のデフォルト値
    */
-  defaultValueX?: number;
+  xDefaultValue?: number;
 
   /**
    * Y軸の値の範囲に制限がある場合の補正種別
-   * 未指定の場合は`clamp`
+   * 未指定の場合は`auto`
    */
-  correctionTypeY?: CorrectionType;
+  yClampMode?: ClampMode;
 
   /**
    * Y軸の補正種別が`defalut`の場合のデフォルト値
    */
-  defaultValueY?: number;
+  yDefaultValue?: number;
 };
 
 /**

@@ -1,4 +1,4 @@
-import getDistance1D, { GetDistance1DOptions } from 'src/utils/coord/getDistance1D';
+import getDistance1D, { GetDistance1DOptions } from 'src/coord/getDistance1D';
 
 describe('getDistance1D', () => {
   describe('default', () => {

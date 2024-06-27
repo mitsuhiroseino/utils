@@ -1,4 +1,4 @@
-import toUTC from 'src/utils/date/toUTC';
+import toUTC from 'src/date/toUTC';
 
 const DATE = new Date(1999, 10, 2, 15, 40, 56, 789);
 

@@ -1,4 +1,4 @@
-import removeAt from 'src/utils/array/removeAt';
+import removeAt from 'src/array/removeAt';
 
 describe('removeAt', () => {
   describe('1要素', () => {

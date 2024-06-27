@@ -1,4 +1,4 @@
-import parse from 'src/utils/boolean/parse';
+import parse from 'src/boolean/parse';
 
 describe('parse', () => {
   describe('default', () => {

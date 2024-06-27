@@ -1,4 +1,4 @@
-import format from 'src/utils/boolean/format';
+import format from 'src/boolean/format';
 
 describe('format', () => {
   describe('true', () => {

@@ -1,4 +1,4 @@
-import toColumnIndex from 'src/utils/spreadsheet/toColumnIndex';
+import toColumnIndex from 'src/spreadsheet/toColumnIndex';
 
 describe('toColumnIndex', () => {
   describe('default', () => {

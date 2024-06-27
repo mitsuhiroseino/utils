@@ -1,4 +1,4 @@
-import clear from 'src/utils/array/clear';
+import clear from 'src/array/clear';
 
 describe('clear', () => {
   test('全要素削除', () => {

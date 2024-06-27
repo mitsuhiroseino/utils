@@ -1,4 +1,4 @@
-import asString from 'src/utils/string/asString';
+import asString from 'src/string/asString';
 
 describe('asString', () => {
   test('文字列', () => {

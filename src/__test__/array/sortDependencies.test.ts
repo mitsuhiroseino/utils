@@ -1,4 +1,4 @@
-import sortDependencies from 'src/utils/array/sortDependencies';
+import sortDependencies from 'src/array/sortDependencies';
 
 const ID_1A = '1a';
 const ID_1A_2A = '1a_2a';

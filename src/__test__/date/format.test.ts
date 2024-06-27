@@ -1,4 +1,4 @@
-import format from 'src/utils/date/format';
+import format from 'src/date/format';
 
 describe('format', () => {
   // JST: 1999-01-02T03:40:56.789

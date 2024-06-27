@@ -1,4 +1,4 @@
-import relayAsync from 'src/utils/function/relayAsync';
+import relayAsync from 'src/function/relayAsync';
 
 describe('relayAsync', () => {
   test('default', () => {

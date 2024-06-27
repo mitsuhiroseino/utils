@@ -1,5 +1,5 @@
-import comparePerformance from 'src/utils/function/comparePerformance';
-import sleep from 'src/utils/function/sleep';
+import comparePerformance from 'src/function/comparePerformance';
+import sleep from 'src/function/sleep';
 
 describe('comparePerformance', () => {
   test('default', () => {

@@ -1,4 +1,4 @@
-import each from 'src/utils/collection/each';
+import each from 'src/collection/each';
 
 describe('each', () => {
   describe('array', () => {

@@ -1,4 +1,4 @@
-import mapFrom from 'src/utils/array/mapFrom';
+import mapFrom from 'src/array/mapFrom';
 
 describe('mapFrom', () => {
   test('配列', () => {

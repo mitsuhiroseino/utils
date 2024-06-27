@@ -1,4 +1,4 @@
-import Replacer from 'src/utils/string/Replacer';
+import Replacer from 'src/string/Replacer';
 
 describe('Replacer', () => {
   // 英字全角・半角

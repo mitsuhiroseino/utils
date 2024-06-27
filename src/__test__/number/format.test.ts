@@ -1,4 +1,4 @@
-import format, { FormatOptions } from 'src/utils/number/format';
+import format, { FormatOptions } from 'src/number/format';
 
 describe('format', () => {
   describe('###', () => {

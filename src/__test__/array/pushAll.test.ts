@@ -1,4 +1,4 @@
-import pushAll from 'src/utils/array/pushAll';
+import pushAll from 'src/array/pushAll';
 
 describe('pushAll', () => {
   test('1要素', () => {

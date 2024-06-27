@@ -1,4 +1,4 @@
-import examineRelationship, { RELATIONAL_OPERATOR } from 'src/utils/lang/examineRelationship';
+import examineRelationship, { RELATIONAL_OPERATOR } from 'src/lang/examineRelationship';
 
 describe('examineRelationship', () => {
   describe('0', () => {

@@ -1,4 +1,4 @@
-import newUTC from 'src/utils/date/newUTC';
+import newUTC from 'src/date/newUTC';
 
 const YMDHMSS = '1999-11-02T15:40:56.789Z',
   YMDHMS = '1999-11-02T15:40:56.000Z',

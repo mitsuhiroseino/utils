@@ -1,4 +1,4 @@
-import uncapitalizeSimply from 'src/utils/string/uncapitalizeSimply';
+import uncapitalizeSimply from 'src/string/uncapitalizeSimply';
 
 describe('uncapitalizeSimply', () => {
   test('先頭小文字', () => {

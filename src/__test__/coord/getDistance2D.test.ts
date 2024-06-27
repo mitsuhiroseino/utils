@@ -1,5 +1,5 @@
-import getDistance2D from 'src/utils/coord/getDistance2D';
-import ensureAccuracy from 'src/utils/number/ensureAccuracy';
+import getDistance2D from 'src/coord/getDistance2D';
+import ensureAccuracy from 'src/number/ensureAccuracy';
 
 const getLength = (x: number, y: number) => Math.sqrt(x * x + y * y);
 

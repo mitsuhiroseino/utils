@@ -1,4 +1,4 @@
-import calcPathDistance from 'src/utils/coord/calcPathDistance';
+import calcPathDistance from 'src/coord/calcPathDistance';
 
 const getLength = (current: { x: number; y: number }, prev: { x: number; y: number }) => {
   const x = current.x - prev.x,

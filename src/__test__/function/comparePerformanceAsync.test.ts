@@ -1,5 +1,5 @@
-import comparePerformanceAsync from 'src/utils/function/comparePerformanceAsync';
-import wait from 'src/utils/function/wait';
+import comparePerformanceAsync from 'src/function/comparePerformanceAsync';
+import wait from 'src/function/wait';
 
 describe('comparePerformanceAsync', () => {
   test('default', () => {

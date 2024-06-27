@@ -1,5 +1,5 @@
 import * as geolib from 'geolib';
-import getGeoPathByRatio from 'src/utils/geo/getGeoPathByRatio';
+import getGeoPathByRatio from 'src/geo/getGeoPathByRatio';
 
 const getLength = (current: { lng: number; lat: number }, prev: { lng: number; lat: number }) => {
   return geolib.getDistance(prev, current);

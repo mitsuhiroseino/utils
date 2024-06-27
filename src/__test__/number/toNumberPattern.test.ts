@@ -1,4 +1,4 @@
-import toNumberPattern from 'src/utils/number/toNumberPattern';
+import toNumberPattern from 'src/number/toNumberPattern';
 
 describe('toNumberPattern', () => {
   test('##0', () => {

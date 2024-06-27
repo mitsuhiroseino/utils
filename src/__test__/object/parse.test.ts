@@ -1,4 +1,4 @@
-import parse from 'src/utils/object/parse';
+import parse from 'src/object/parse';
 
 describe('parse', () => {
   const DATE = new Date(1999, 0, 2, 3, 40, 56, 789),

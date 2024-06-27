@@ -1,4 +1,4 @@
-import update, { COMPARE_MODE } from 'src/utils/object/update';
+import update, { COMPARE_MODE } from 'src/object/update';
 
 describe('update', () => {
   const getValue = () => ({

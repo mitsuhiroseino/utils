@@ -1,4 +1,4 @@
-import compare, { CompareResult, DIFFERENCE_TYPE, NO_VALUE, VALUE_TYPE } from 'src/utils/data/compare';
+import compare, { CompareResult, DIFFERENCE_TYPE, NO_VALUE, VALUE_TYPE } from 'src/data/compare';
 
 describe('compare', () => {
   describe('array', () => {

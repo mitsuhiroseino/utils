@@ -1,5 +1,5 @@
 import uniq from 'lodash/uniq';
-import uuid from 'src/utils/data/uuid';
+import uuid from 'src/data/uuid';
 
 describe('uuid', () => {
   test('重複', () => {

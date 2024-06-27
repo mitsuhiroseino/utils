@@ -1,4 +1,4 @@
-import measure from 'src/utils/function/measure';
+import measure from 'src/function/measure';
 
 describe('measure', () => {
   test('fnのみ', () => {

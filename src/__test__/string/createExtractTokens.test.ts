@@ -1,4 +1,4 @@
-import createExtractTokens from 'src/utils/string/createExtractTokens';
+import createExtractTokens from 'src/string/createExtractTokens';
 
 describe('createExtractTokens', () => {
   test('prefix="{{", suffix="}}"', () => {

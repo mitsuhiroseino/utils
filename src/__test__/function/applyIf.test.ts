@@ -1,4 +1,4 @@
-import applyIf from 'src/utils/function/applyIf';
+import applyIf from 'src/function/applyIf';
 
 describe('applyIf', () => {
   test('fnあり', () => {

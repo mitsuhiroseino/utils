@@ -1,4 +1,4 @@
-import remove from 'src/utils/array/remove';
+import remove from 'src/array/remove';
 
 describe('remove', () => {
   const ITEM0 = { $id: 'ID0', field0: 0, field1: 4, field2: 0, field3: '!!' },

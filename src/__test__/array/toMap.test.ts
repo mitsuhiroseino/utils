@@ -1,4 +1,4 @@
-import toMap from 'src/utils/array/toMap';
+import toMap from 'src/array/toMap';
 
 describe('toMap', () => {
   const ITEM0 = { $id: 'ID0', field0: 0, field1: 4, field2: 0, field3: '!!' },

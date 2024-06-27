@@ -1,4 +1,4 @@
-import isIterable from 'src/utils/lang/isIterable';
+import isIterable from 'src/lang/isIterable';
 
 describe('isIterable', () => {
   describe('true', () => {

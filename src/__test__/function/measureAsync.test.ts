@@ -1,4 +1,4 @@
-import measureAsync from 'src/utils/function/measureAsync';
+import measureAsync from 'src/function/measureAsync';
 
 describe('measureAsync', () => {
   test('fnのみ', () => {

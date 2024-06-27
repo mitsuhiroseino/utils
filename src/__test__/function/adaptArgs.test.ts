@@ -1,4 +1,4 @@
-import adaptArgs from 'src/utils/function/adaptArgs';
+import adaptArgs from 'src/function/adaptArgs';
 
 describe('adaptArgs', () => {
   test('引数の差し替え', () => {

@@ -1,4 +1,4 @@
-import parse from 'src/utils/number/parse';
+import parse from 'src/number/parse';
 
 describe('parse', () => {
   describe('default', () => {

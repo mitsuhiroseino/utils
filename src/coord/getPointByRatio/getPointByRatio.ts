@@ -118,9 +118,9 @@ function getNormalizedValue(value: number, axis: string, options: GetPointByRati
   if (min != null && max != null) {
     // 補正あり
     const [minValue, maxValue] = getValidMinMax(min, max),
-      correctionType = options[`correctionType${axis}`],
-      defaultValue = options[`defaultValue${axis}`];
-    return clamp(value, minValue, maxValue, { correctionType, defaultValue });
+      clampMode = options[`${axis}ClampMode`],
+      defaultValue = options[`${axis}DefaultValue`];
+    return clamp(value, minValue, maxValue, { minClampMode: clampMode, maxClampMode: clampMode, defaultValue });
   } else {
     // 補正なし
     return value;

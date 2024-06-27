@@ -1,4 +1,4 @@
-import getPathByRatio from 'src/utils/coord/getPathByRatio';
+import getPathByRatio from 'src/coord/getPathByRatio';
 
 const getLength = (current: { x: number; y: number }, prev: { x: number; y: number }) => {
   const x = current.x - prev.x,

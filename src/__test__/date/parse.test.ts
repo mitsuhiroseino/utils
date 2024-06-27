@@ -1,5 +1,5 @@
-import newUTC from 'src/utils/date/newUTC';
-import parse from 'src/utils/date/parse';
+import newUTC from 'src/date/newUTC';
+import parse from 'src/date/parse';
 
 // 1999/01/02 15:40:56.789
 const JST_YMDHMSS = new Date(1999, 0, 2, 15, 40, 56, 789),

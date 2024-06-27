@@ -1,4 +1,4 @@
-import expand from 'src/utils/array/expand';
+import expand from 'src/array/expand';
 
 describe('expand', () => {
   test('0周', () => {

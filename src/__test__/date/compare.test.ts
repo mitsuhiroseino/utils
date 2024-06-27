@@ -1,4 +1,4 @@
-import compare from 'src/utils/date/compare';
+import compare from 'src/date/compare';
 
 describe('compare', () => {
   const DATE0_TIME0 = new Date(2000, 1, 2, 3, 40, 56, 789),

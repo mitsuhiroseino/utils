@@ -1,4 +1,4 @@
-import pushUnique from 'src/utils/array/pushUnique';
+import pushUnique from 'src/array/pushUnique';
 
 describe('pushUnique', () => {
   describe('1要素', () => {

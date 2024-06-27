@@ -1,4 +1,4 @@
-import insert from 'src/utils/array/insert';
+import insert from 'src/array/insert';
 
 describe('insert', () => {
   describe('1要素', () => {

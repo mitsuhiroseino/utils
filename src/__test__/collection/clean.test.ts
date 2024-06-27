@@ -1,4 +1,4 @@
-import clean from 'src/utils/collection/clean';
+import clean from 'src/collection/clean';
 
 describe('clean', () => {
   test('0要素削除', () => {

@@ -1,4 +1,4 @@
-import extractTokens from 'src/utils/string/extractTokens';
+import extractTokens from 'src/string/extractTokens';
 
 describe('extractTokens', () => {
   test('tokenなし', () => {

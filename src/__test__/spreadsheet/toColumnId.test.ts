@@ -1,4 +1,4 @@
-import toColumnId from 'src/utils/spreadsheet/toColumnId';
+import toColumnId from 'src/spreadsheet/toColumnId';
 
 describe('toColumnId', () => {
   describe('default', () => {

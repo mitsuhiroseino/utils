@@ -1,4 +1,4 @@
-import getPointByRatio, { GetPointByRatioOptions } from 'src/utils/coord/getPointByRatio';
+import getPointByRatio, { GetPointByRatioOptions } from 'src/coord/getPointByRatio';
 
 const getLength = (current: { x: number; y: number }, prev: { x: number; y: number }) => {
   const x = current.x - prev.x,

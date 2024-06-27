@@ -1,4 +1,4 @@
-import asArray from 'src/utils/array/asArray';
+import asArray from 'src/array/asArray';
 
 describe('asArray', () => {
   test('null', () => {

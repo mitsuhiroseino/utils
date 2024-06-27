@@ -1,4 +1,4 @@
-import transform from 'src/utils/string/transform';
+import transform from 'src/string/transform';
 
 describe('transform', () => {
   test('toLowerCase', () => {
