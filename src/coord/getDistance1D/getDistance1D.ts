@@ -11,10 +11,10 @@ import { GetDistance1DOptions } from './types';
  * @returns 始点から終点の距離
  */
 export default function getDistance1D(start: number, end: number, options: GetDistance1DOptions = {}) {
-  const { abs, loop, minValue, maxValue, accuracy } = options;
+  const { abs, wrap, minValue, maxValue, accuracy } = options;
 
   let distance;
-  if (loop && minValue != null && maxValue != null) {
+  if (wrap && minValue != null && maxValue != null) {
     // ループした領域での距離を求める
     const [min, max] = getValidMinMax(minValue, maxValue);
     distance = _getLoopedDistance(start, end, min, max);

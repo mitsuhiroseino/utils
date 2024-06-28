@@ -18,14 +18,14 @@ export default function getGeoPointByRatio(
   ratio: number,
   options: GetGeoPointByRatioOptions = {},
 ): GetGeoPointByRatioResult {
-  const { keyX = 'lng', keyY = 'lat', ...rest } = options;
+  const { xKey: keyX = 'lng', yKey: keyY = 'lat', ...rest } = options;
 
   return getPointByRatio(path, ratio, {
     ...rest,
-    keysX: geolib.longitudeKeys as (string | number)[],
-    keysY: geolib.latitudeKeys as (string | number)[],
-    keyX,
-    keyY,
+    xKeys: geolib.longitudeKeys as (string | number)[],
+    yKeys: geolib.latitudeKeys as (string | number)[],
+    xKey: keyX,
+    yKey: keyY,
     getDistance: GET_DISTANCE,
   });
 }

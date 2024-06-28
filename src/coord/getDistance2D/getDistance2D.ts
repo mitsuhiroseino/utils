@@ -11,7 +11,7 @@ import { GetDistance2DOptions } from './types';
  */
 export default function getDistance2D(start: any, end: any, options: GetDistance2DOptions = {}) {
   const { accuracy, ...rest } = options,
-    diff = getDiff2D(start, end, { ...rest, keyX: 'x', keyY: 'y' }),
+    diff = getDiff2D(start, end, { ...rest, xKey: 'x', yKey: 'y' }),
     // 三角関数で算出
     distance = Math.sqrt(Math.pow(diff.x, 2) + Math.pow(diff.y, 2));
 

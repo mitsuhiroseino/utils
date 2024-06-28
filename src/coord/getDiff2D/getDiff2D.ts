@@ -2,8 +2,8 @@ import getAnyKey from '../../collection/getAnyKey';
 import getDistance1D from '../getDistance1D';
 import { GetDiff2DOptions } from './types';
 
-const KEY_X = 'x',
-  KEY_Y = 'y';
+const X_KEY = 'x',
+  Y_KEY = 'y';
 
 /**
  * 始点と終点の各座標の差を求める
@@ -15,37 +15,37 @@ const KEY_X = 'x',
 export default function getDiff2D(start: any, end: any, options: GetDiff2DOptions = {}) {
   const {
       abs,
-      keysX = KEY_X,
-      loopX,
-      minValueX,
-      maxValueX,
-      keysY = KEY_Y,
-      loopY,
-      minValueY,
-      maxValueY,
-      keyX = KEY_X,
-      keyY = KEY_Y,
+      xKeys = X_KEY,
+      xWrap,
+      xMinValue,
+      xMaxValue,
+      yKeys = Y_KEY,
+      yWrap,
+      yMinValue,
+      yMaxValue,
+      xKey = X_KEY,
+      yKey = Y_KEY,
       extraOptions,
       ...options1D
     } = options,
-    startKeyX = getAnyKey(start, keysX) || KEY_X,
-    endKeyX = getAnyKey(end, keysX) || KEY_X,
-    diffX = getDistance1D(start[startKeyX], end[endKeyX], {
-      loop: loopX,
-      minValue: minValueX,
-      maxValue: maxValueX,
-      extraOptions: { axis: keyX, ...extraOptions },
+    xStartKey = getAnyKey(start, xKeys) || X_KEY,
+    xEndKey = getAnyKey(end, xKeys) || X_KEY,
+    xDiff = getDistance1D(start[xStartKey], end[xEndKey], {
+      wrap: xWrap,
+      minValue: xMinValue,
+      maxValue: xMaxValue,
+      extraOptions: { axis: xKey, ...extraOptions },
       ...options1D,
     }),
-    startKeyY = getAnyKey(start, keysY) || KEY_Y,
-    endKeyY = getAnyKey(end, keysY) || KEY_Y,
-    diffY = getDistance1D(start[startKeyY], end[endKeyY], {
-      loop: loopY,
-      minValue: minValueY,
-      maxValue: maxValueY,
-      extraOptions: { axis: keyY, ...extraOptions },
+    yStartKey = getAnyKey(start, yKeys) || Y_KEY,
+    yEndKey = getAnyKey(end, yKeys) || Y_KEY,
+    yDiff = getDistance1D(start[yStartKey], end[yEndKey], {
+      wrap: yWrap,
+      minValue: yMinValue,
+      maxValue: yMaxValue,
+      extraOptions: { axis: yKey, ...extraOptions },
       ...options1D,
     });
 
-  return abs ? { [keyX]: Math.abs(diffX), [keyY]: Math.abs(diffY) } : { [keyX]: diffX, [keyY]: diffY };
+  return abs ? { [xKey]: Math.abs(xDiff), [yKey]: Math.abs(yDiff) } : { [xKey]: xDiff, [yKey]: yDiff };
 }

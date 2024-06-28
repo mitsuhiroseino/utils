@@ -3,62 +3,62 @@ import { GetDistance1DOptions } from '../getDistance1D';
 /**
  * オプション
  */
-export type GetDiff2DOptions = Omit<GetDistance1DOptions, 'loop' | 'minValue' | 'maxValue'> & {
+export type GetDiff2DOptions = Omit<GetDistance1DOptions, 'wrap' | 'minValue' | 'maxValue'> & {
   /**
    * X軸の値を持つプロパティのキー
    * 未指定の場合は`x`
    */
-  keysX?: string | number | (string | number)[];
+  xKeys?: string | number | (string | number)[];
 
   /**
    * X軸が最小値～最大値の間でループしていることを想定して距離を算出する
    */
-  loopX?: boolean;
+  xWrap?: boolean;
 
   /**
    * X軸の下限
    * loopX=trueの場合必須
    */
-  minValueX?: number;
+  xMinValue?: number;
 
   /**
    * X軸の上限
    * loopX=trueの場合必須
    */
-  maxValueX?: number;
+  xMaxValue?: number;
 
   /**
    * Y軸の値を持つプロパティのキー
    * 未指定の場合は`y`
    */
-  keysY?: string | number | (string | number)[];
+  yKeys?: string | number | (string | number)[];
 
   /**
    * Y軸が最小値～最大値の間でループしていることを想定して距離を算出する
    */
-  loopY?: boolean;
+  yWrap?: boolean;
 
   /**
    * Y軸の下限
    * loopY=trueの場合必須
    */
-  minValueY?: number;
+  yMinValue?: number;
 
   /**
    * Y軸の上限
    * loopY=trueの場合必須
    */
-  maxValueY?: number;
+  yMaxValue?: number;
 
   /**
    * 戻り値でX軸の値を持つプロパティ
    * デフォルトは`x`
    */
-  keyX?: string;
+  xKey?: string;
 
   /**
    * 戻り値でY軸の値を持つプロパティ
    * デフォルトは`y`
    */
-  keyY?: string;
+  yKey?: string;
 };

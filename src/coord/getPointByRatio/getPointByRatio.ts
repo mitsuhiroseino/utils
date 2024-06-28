@@ -10,8 +10,8 @@ import getDiff2D from '../getDiff2D';
 import getDistance2D from '../getDistance2D';
 import { GetPointByRatioInput, GetPointByRatioOptions, GetPointByRatioResult } from './types';
 
-const KEY_X = 'x',
-  KEY_Y = 'y';
+const X_KEY = 'x',
+  Y_KEY = 'y';
 
 /**
  * 経路(点の配列)を基に指定の割合の位置を返す
@@ -28,14 +28,14 @@ export default function getPointByRatio(
   const {
       startIndex = 0,
       step,
-      keysX = KEY_X,
-      keysY = KEY_Y,
-      keyX = KEY_X,
-      keyY = KEY_Y,
+      xKeys = X_KEY,
+      yKeys = Y_KEY,
+      xKey = X_KEY,
+      yKey = Y_KEY,
       getDistance = getDistance2D,
       ...rest
     } = options,
-    opts = { keysX, keysY, keyX, keyY, getDistance, ...rest },
+    opts = { xKeys, yKeys, xKey, yKey, getDistance, ...rest },
     pathWithDistance = calcPathDistance(path, opts),
     targetPath = slice(pathWithDistance, startIndex),
     length = targetPath.length;
@@ -81,20 +81,20 @@ function calcNewPointAtRatio(
   ratio: number,
   point: GetPointByRatioInput,
   previousPoint: GetPointByRatioInput,
-  options: Required<Pick<GetPointByRatioOptions, 'getDistance' | 'keysX' | 'keysY' | 'keyX' | 'keyY'>> &
+  options: Required<Pick<GetPointByRatioOptions, 'getDistance' | 'xKeys' | 'yKeys' | 'xKey' | 'yKey'>> &
     GetPointByRatioOptions,
 ): GetPointByRatioResult {
   // 前の点から目的の点の割合の差
-  const { keysX, keysY, keyX, keyY, getDistance, ...rest } = options;
+  const { xKeys, yKeys, xKey, yKey, getDistance, ...rest } = options;
   const ratioDiff = point.ratio - previousPoint.ratio;
   // 割合の差の割合
   const ratioRatio = (ratio - previousPoint.ratio) / ratioDiff;
   // 前の点からの差
-  const diff = getDiff2D(previousPoint, point, { keysX, keysY, ...rest });
+  const diff = getDiff2D(previousPoint, point, { xKeys, yKeys, ...rest });
   // 前の点に前の点からの差の指定割合の割合をかければ欲しい点になる
-  const x = getNormalizedValue(getAnyValue(previousPoint, keysX) + diff.x * ratioRatio, 'X', options);
-  const y = getNormalizedValue(getAnyValue(previousPoint, keysY) + diff.y * ratioRatio, 'Y', options);
-  const newPoint = { ...point, [keyX]: x, [keyY]: y };
+  const x = getNormalizedValue(getAnyValue(previousPoint, xKeys) + diff.x * ratioRatio, 'X', options);
+  const y = getNormalizedValue(getAnyValue(previousPoint, yKeys) + diff.y * ratioRatio, 'Y', options);
+  const newPoint = { ...point, [xKey]: x, [yKey]: y };
   // 距離を算出
   const distanceDelta = getDistance(previousPoint, newPoint, options);
 
@@ -113,8 +113,8 @@ function calcNewPointAtRatio(
  * @returns
  */
 function getNormalizedValue(value: number, axis: string, options: GetPointByRatioOptions): number {
-  const min = options[`minValue${axis}`],
-    max = options[`minValue${axis}`];
+  const min = options[`${axis}MinValue`],
+    max = options[`${axis}MinValue`];
   if (min != null && max != null) {
     // 補正あり
     const [minValue, maxValue] = getValidMinMax(min, max),

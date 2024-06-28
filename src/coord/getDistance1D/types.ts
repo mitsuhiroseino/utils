@@ -21,7 +21,7 @@ export type GetDistance1DOptions = {
   /**
    * 軸が最小値～最大値の間でループしていることを想定して距離を算出する
    */
-  loop?: boolean;
+  wrap?: boolean;
 
   /**
    * 軸の下限

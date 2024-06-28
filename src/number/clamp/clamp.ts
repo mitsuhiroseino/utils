@@ -12,7 +12,7 @@ const CLAMP = {
   // 値が一周しているというあつかいで算出
   [WRAP]: (value: number, min: number, max: number, defaultValue: number) => {
     const range = Math.abs(max - min);
-    // ループした余り
+    // 整数倍周回した余り
     let remainingValue = (value - min) % range;
     if (remainingValue < 0) {
       // 余りがマイナスの場合はプラスに補正

@@ -69,63 +69,63 @@ export function interpolateFrameWithIndex(
   ratio: number,
   options: GetItemByRatioOptions,
 ): GetItemByRatioResult {
-  const { calcSum = CALC_SUM, calcDifference = CALC_DIFFERENCE, calcProduct = CALC_PRODUCT } = options,
-    maxIndex = frames.length - 1,
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //   0                        ^                        1
-    //                            ratio=0.54を下回るこの要素を取得
-    startIndex = findLastIndex(frames, (frame, index) => index / maxIndex <= ratio),
-    startFrame = frames[startIndex],
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //   0                        ^                        1
-    //   |========================|
-    //   全体に対する開始要素までの割合を算出
-    startRatio = startIndex / maxIndex,
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //   0                             ^                   1
-    //   |=============================|
-    //   全体に対する開始要素の次の要素までの割合を算出
-    endIndex = startIndex + 1,
-    endRatio = endIndex / maxIndex,
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //   0                        ^    ^                   1
-    //                            |====|
-    //                            開始要素から次の要素までの割合の差を算出
-    ratioDiff = endRatio - startRatio,
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //   0                        ^                        1
-    //   |==========================!======================|
-    //                            |=|
-    //                              開始要素から全体の対する現在のratioの割合(totalRatio)の差を算出
-    ratioOver = ratio - startRatio,
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //                            0    1
-    //                            |====| これを1とした場合の
-    //                            |=| この長さの割合を算出
-    //
-    ratioRatio = ratioOver / ratioDiff,
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //                            |----|
-    //                            実際の要素のこの差を算出
-    endFrame = frames[endIndex],
-    diffFrame = calcDifference(startFrame, endFrame),
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //                            |-|
-    //                            割合を基に実際の要素のこの差を算出
-    deltaFrame = calcProduct(diffFrame, ratioRatio),
-    //   0    1    2    3    4    5    6    7    8    9    10
-    //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
-    //                              ^
-    //                              この位置に当たる要素を算出して返す
-    frame = calcSum(startFrame, deltaFrame);
+  const { calcSum = CALC_SUM, calcDifference = CALC_DIFFERENCE, calcProduct = CALC_PRODUCT } = options;
+  const maxIndex = frames.length - 1;
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //   0                        ^                        1
+  //                            ratio=0.54を下回るこの要素を取得
+  const startIndex = findLastIndex(frames, (frame, index) => index / maxIndex <= ratio);
+  const startFrame = frames[startIndex];
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //   0                        ^                        1
+  //   |========================|
+  //   全体に対する開始要素までの割合を算出
+  const startRatio = startIndex / maxIndex;
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //   0                             ^                   1
+  //   |=============================|
+  //   全体に対する開始要素の次の要素までの割合を算出
+  const endIndex = startIndex + 1;
+  const endRatio = endIndex / maxIndex;
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //   0                        ^    ^                   1
+  //                            |====|
+  //                            開始要素から次の要素までの割合の差を算出
+  const ratioDiff = endRatio - startRatio;
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //   0                        ^                        1
+  //   |==========================!======================|
+  //                            |=|
+  //                              開始要素から全体の対する現在のratioの割合(totalRatio)の差を算出
+  const ratioOver = ratio - startRatio;
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //                            0    1
+  //                            |====| これを1とした場合の
+  //                            |=| この長さの割合を算出
+  //
+  const ratioRatio = ratioOver / ratioDiff;
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //                            |----|
+  //                            実際の要素のこの差を算出
+  const endFrame = frames[endIndex];
+  const diffFrame = calcDifference(startFrame, endFrame);
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //                            |-|
+  //                            割合を基に実際の要素のこの差を算出
+  const deltaFrame = calcProduct(diffFrame, ratioRatio);
+  //   0    1    2    3    4    5    6    7    8    9    10
+  //   +----+----+----+-#--+----+-x--+----+----+-*--+----+
+  //                              ^
+  //                              この位置に当たる要素を算出して返す
+  const frame = calcSum(startFrame, deltaFrame);
 
   return [frame, endIndex];
 }
