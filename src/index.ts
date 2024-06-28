@@ -8,6 +8,7 @@ export * as date from './date';
 export * as easing from './easing';
 export * as function from './function';
 export * as geo from './geo';
+export * as identifier from './identifier';
 export * as instance from './instance';
 export * as lang from './lang';
 export * as number from './number';
