@@ -3,7 +3,7 @@
  */
 export type GetIdOptions = {
   /**
-   * IDを設定するプロパティ
+   * IDの取得元になるプロパティ
    * デフォルトは`$id`
    */
   property?: string;

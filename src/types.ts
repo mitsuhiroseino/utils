@@ -1,3 +1,5 @@
+import { IdentifiableProps } from './identifier';
+
 /**
  * 任意のオブジェクト
  */
@@ -12,6 +14,16 @@ export type AnyOptions = AnyObject<any>;
  * mixin定義用のコンストラクター
  */
 export type Constructor<I = any> = new (...args: any[]) => I;
+
+/**
+ * 識別可能な要素の設定
+ */
+export type IdentifiableConfig = Optional<Identifiable, '$id'>;
+
+/**
+ * 識別可能な要素
+ */
+export interface Identifiable extends Optional<IdentifiableProps, '$idName'> {}
 
 /**
  * JSON.stringifyを利用する機能用のオプション

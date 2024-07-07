@@ -1,9 +1,14 @@
 /**
- * IDを持つ要素
+ * 識別可能にするプロパティ
  */
-export type Identifiable = {
+export type IdentifiableProps = {
   /**
    * ID
    */
   $id: string;
+
+  /**
+   * 識別名
+   */
+  $idName: string;
 };
