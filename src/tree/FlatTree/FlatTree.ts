@@ -1,76 +1,44 @@
 import { FLAT_TREE_NODE } from './constans';
+import NodeBase from './NodeBase';
 import TreeNode from './TreeNode';
-import { FlatTreeOptions, Node } from './types';
+import { FlatTreeOptions } from './types';
 
 /**
  * ツリー構造の配列をフラットな配列として扱うクラス
  */
-export default class FlatTree<I extends object> implements Node<I> {
-  private _options: FlatTreeOptions;
-
+export default class FlatTree<I extends object> extends NodeBase<I> {
   /**
-   * 要素の配列
+   * コンストラクター
+   * @param items
+   * @param options
    */
-  private _rootItems: I[] = [];
-
-  /**
-   * プロキシの配列
-   */
-  private _rootProxies: I[] = [];
-
-  /**
-   * TreeNodeの配列
-   */
-  private _rootNodes: TreeNode<I>[] = [];
-
-  /**
-   * 現在のフラットな配列
-   */
-  private _currentFlatProxies: I[];
-
   constructor(items: I[], options: FlatTreeOptions = {}) {
-    this._options = options;
+    super();
+    const { childrenProp = 'children', isExpandedProp = 'isExpanded', ...rest } = options;
+    const proxyHandlers = this._createProxyHandlers(childrenProp, isExpandedProp);
+    this._options = { ...rest, childrenProp, isExpandedProp, proxyHandlers };
+    this._hasChildren = true;
+    this._isExpanded = true;
     this.addAll(items);
   }
 
-  add(item: I) {
-    const node = this._add(item);
-    this._updateCurrent();
-    return node;
-  }
-
-  addAll(items: I[]) {
-    const nodes = items.map((item) => this._add(item));
-    this._updateCurrent();
-    return nodes;
-  }
-
-  private _add(item: I) {
-    const node = new TreeNode(item, this._options);
-    this._rootItems.push(node.getItem());
-    this._rootProxies.push(node.getProxy());
-    this._rootNodes.push(node);
-    return node;
-  }
-
-  getItems() {
-    return this._rootItems;
-  }
-
-  getProxies() {
-    return this._rootProxies;
-  }
-
   /**
-   * 開いている子要素をフラットな配列として取得する
+   * プロキシ用のプロパティ毎のハンドラーを作る
+   * @param childrenProp
+   * @param isExpandedProp
    * @returns
    */
-  getFlatNodes() {
-    let nodes: TreeNode<I>[] = [];
-    this._rootNodes.forEach((node) => {
-      nodes = nodes.concat(node.getFlatNodes());
-    });
-    return nodes;
+  private _createProxyHandlers(childrenProp: string, isExpandedProp: string): any {
+    return {
+      get: {
+        // ノードの取得
+        [FLAT_TREE_NODE]: (node: TreeNode<I>, prop: string) => node,
+        // 子要素の取得
+        [childrenProp]: (node: TreeNode<I>, prop: string) => node.getProxies(),
+        // 子要素を開閉フラグを取得
+        [isExpandedProp]: (node: TreeNode<I>, prop: string) => node.isExpanded(),
+      },
+    };
   }
 
   /**
@@ -78,22 +46,7 @@ export default class FlatTree<I extends object> implements Node<I> {
    * @returns
    */
   getFlatProxies() {
-    if (!this._currentFlatProxies) {
-      this._currentFlatProxies = this._getFlatProxies();
-    }
-    return this._currentFlatProxies;
-  }
-
-  /**
-   * 開いている子要素のitemをフラットな配列として取得する
-   * @returns
-   */
-  private _getFlatProxies() {
-    let items: I[] = [];
-    this._rootNodes.forEach((node) => {
-      items = items.concat(node.getFlatProxies());
-    });
-    return items;
+    return this._getFlatProxies();
   }
 
   /**
@@ -102,7 +55,7 @@ export default class FlatTree<I extends object> implements Node<I> {
   expand(item: I[]) {
     const node: TreeNode<I> = item[FLAT_TREE_NODE];
     node.expand();
-    this._updateCurrent();
+    this._commit();
   }
 
   /**
@@ -111,10 +64,6 @@ export default class FlatTree<I extends object> implements Node<I> {
   collapse(item: I[]) {
     const node: TreeNode<I> = item[FLAT_TREE_NODE];
     node.collapse();
-    this._updateCurrent();
-  }
-
-  private _updateCurrent() {
-    this._currentFlatProxies = null;
+    this._commit();
   }
 }

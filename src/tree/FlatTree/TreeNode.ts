@@ -1,38 +1,42 @@
-import { FLAT_TREE_NODE } from './constans';
-import { Node, TreeNodeOptions } from './types';
+import NodeBase from './NodeBase';
+import { TreeNodeOptions } from './types';
 
 /**
  * ツリーのノード
  */
-export default class TreeNode<I extends object> implements Node<I> {
-  private _options: TreeNodeOptions<I>;
+export default class TreeNode<I extends object> extends NodeBase<I> {
+  /**
+   * 元の要素
+   */
   private _item: I;
+
+  /**
+   * プロキシされた要素
+   */
   private _proxy: I;
+
+  /**
+   * 親ノード
+   */
   private _parent: TreeNode<I>;
-  private _hasChildren = false;
-  private _isExpanded = false;
-  private _children: I[];
-  private _childProxies: I[];
-  private _childNodes?: TreeNode<I>[];
+
+  /**
+   * ネストレベル
+   */
   private _level: number;
 
   constructor(item: I, options: TreeNodeOptions<I> = {}) {
-    const {
-      parent,
-      childrenProp = 'children',
-      isExpandedProp = 'isExpanded',
-      proxyHandlers = this._createProxyHandlers(childrenProp, isExpandedProp),
-      ...rest
-    } = options;
-    this._options = { ...rest, parent: this, childrenProp, isExpandedProp, proxyHandlers };
+    super();
+    const { parent, childrenProp = 'children', isExpandedProp = 'isExpanded', proxyHandlers, ...rest } = options;
+    this._options = { ...rest, parent: this };
     // 受け取ったものを保持
     this._item = item;
-    this._children = item[childrenProp];
+    const children = item[childrenProp];
+    this._children = children;
     this._parent = parent;
     // itemのプロキシを作成
     this._proxy = this._proxyItem(item, proxyHandlers);
     // 子要素もNodeインスタンスを作る
-    const children = item[childrenProp];
     if (children !== undefined) {
       this._hasChildren = true;
       if (children !== null) {
@@ -41,29 +45,10 @@ export default class TreeNode<I extends object> implements Node<I> {
     }
     // レベルを設定
     if (parent) {
-      this._level = parent._level + 1;
+      this._level = parent.getLevel() + 1;
     } else {
       this._level = 0;
     }
-  }
-
-  /**
-   * プロキシ用のプロパティ毎のハンドラーを作る
-   * @param childrenProp
-   * @param isExpandedProp
-   * @returns
-   */
-  private _createProxyHandlers(childrenProp: string, isExpandedProp: string): any {
-    return {
-      get: {
-        // ノードの取得
-        [FLAT_TREE_NODE]: (node: TreeNode<I>, prop: string) => node,
-        // 子要素の取得
-        [childrenProp]: (node: TreeNode<I>, prop: string) => node._childProxies,
-        // 子要素を開閉フラグを取得
-        [isExpandedProp]: (node: TreeNode<I>, prop: string) => node._isExpanded,
-      },
-    };
   }
 
   /**
@@ -86,28 +71,6 @@ export default class TreeNode<I extends object> implements Node<I> {
     });
   }
 
-  /**
-   * 子要素を追加する
-   * @param item
-   * @returns
-   */
-  add(item: I) {
-    const node = new TreeNode<I>(item, this._options);
-    this._children.push(item);
-    this._childProxies.push(node._proxy);
-    this._childNodes.push(node);
-    return node;
-  }
-
-  /**
-   * 子要素を纏めて追加する
-   * @param items
-   * @returns
-   */
-  addAll(items: I[]) {
-    return items.map((item) => this.add(item));
-  }
-
   getItem() {
     return this._item;
   }
@@ -120,18 +83,8 @@ export default class TreeNode<I extends object> implements Node<I> {
     return this._childProxies;
   }
 
-  /**
-   * 自身と開いている子要素をフラットな配列として取得する
-   * @returns
-   */
-  getFlatNodes() {
-    let nodes: TreeNode<I>[] = [this];
-    if (this._hasChildren && this._childNodes && this._isExpanded) {
-      this._childNodes.forEach((child) => {
-        nodes = nodes.concat(child.getFlatNodes());
-      });
-    }
-    return nodes;
+  getLevel() {
+    return this._level;
   }
 
   /**
@@ -139,13 +92,61 @@ export default class TreeNode<I extends object> implements Node<I> {
    * @returns
    */
   getFlatProxies() {
-    let items: I[] = [this._item];
-    if (this._hasChildren && this._childNodes && this._isExpanded) {
-      this._childNodes.forEach((child) => {
-        items = items.concat(child.getFlatProxies());
-      });
+    return this._getFlatProxies(this._proxy);
+  }
+
+  getParent(): TreeNode<I> {
+    return this._parent;
+  }
+
+  /**
+   * nodeの親であるか
+   * @param node
+   */
+  isParentOf(node: TreeNode<I>) {
+    return node.isChildOf(this);
+  }
+
+  /**
+   * nodeの子であるか
+   * @param node
+   * @returns
+   */
+  isChildOf(node: TreeNode<I>) {
+    return this._parent === node;
+  }
+
+  /**
+   * nodeの先祖であるか
+   * @param node
+   * @returns
+   */
+  isAncestorOf(node: TreeNode<I>) {
+    return node.isDescendantOf(this);
+  }
+
+  /**
+   * nodeの子孫であるか
+   * @param node
+   * @returns
+   */
+  isDescendantOf(node: TreeNode<I>) {
+    const parent = this._parent;
+    if (parent === node) {
+      return true;
+    } else if (parent) {
+      return parent.isDescendantOf(node);
+    } else {
+      return false;
     }
-    return items;
+  }
+
+  /**
+   * ルートのノードか
+   * @returns
+   */
+  isRoot() {
+    return !this._parent;
   }
 
   /**
@@ -153,6 +154,7 @@ export default class TreeNode<I extends object> implements Node<I> {
    */
   expand() {
     this._isExpanded = true;
+    this._commit();
   }
 
   /**
@@ -160,5 +162,6 @@ export default class TreeNode<I extends object> implements Node<I> {
    */
   collapse() {
     this._isExpanded = false;
+    this._commit();
   }
 }

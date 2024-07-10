@@ -39,31 +39,44 @@ export type NodeOptionsBase = {
 
 export interface Node<I extends object> {
   /**
+   * 子要素の有無
+   */
+  hasChildren(): boolean;
+
+  /**
+   * 子要素の開閉状態
+   */
+  isExpanded(): boolean;
+
+  /**
    * 子要素を追加する
    * @param item
    */
-  add(item: I): Node<I>;
+  add(item: I): TreeNode<I>;
 
   /**
    * 子要素を纏めて追加する
    * @param items
    */
-  addAll(items: I[]): Node<I>[];
+  addAll(items: I[]): TreeNode<I>[];
 
   /**
-   * 子要素を取得する
+   * 子要素の取得
+   * @returns
    */
-  getFlatProxies(): I[];
+  getItems(): I[];
 
   /**
-   * 子要素のプロキシを取得する
+   * プロキシされた子要素の取得
+   * @returns
    */
   getProxies(): I[];
 
   /**
-   * 開いている子要素のノードをフラットな配列として取得する
+   * 子ノードの取得
+   * @returns
    */
-  getFlatNodes(): Node<I>[];
+  getNodes(): TreeNode<I>[];
 
   /**
    * 開いている子要素のプロキシをフラットな配列として取得する
