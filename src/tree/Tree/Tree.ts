@@ -4,9 +4,9 @@ import TreeNode from './TreeNode';
 import { FlatTreeOptions } from './types';
 
 /**
- * ツリー構造の配列をフラットな配列として扱うクラス
+ * ツリー構造の配列を扱うクラス
  */
-export default class FlatTree<I extends object> extends NodeBase<I> {
+export default class Tree<I extends object> extends NodeBase<I> {
   /**
    * コンストラクター
    * @param items
@@ -16,10 +16,11 @@ export default class FlatTree<I extends object> extends NodeBase<I> {
     super();
     const { childrenProp = 'children', isExpandedProp = 'isExpanded', ...rest } = options;
     const proxyHandlers = this._createProxyHandlers(childrenProp, isExpandedProp);
-    this._options = { ...rest, childrenProp, isExpandedProp, proxyHandlers };
+    this._options = { ...rest, childrenProp, isExpandedProp, proxyHandlers, parent: this };
     this._hasChildren = true;
     this._isExpanded = true;
-    this.addAll(items);
+    this._level = -1;
+    this.setChildren(items);
   }
 
   /**
@@ -34,7 +35,7 @@ export default class FlatTree<I extends object> extends NodeBase<I> {
         // ノードの取得
         [FLAT_TREE_NODE]: (node: TreeNode<I>, prop: string) => node,
         // 子要素の取得
-        [childrenProp]: (node: TreeNode<I>, prop: string) => node.getProxies(),
+        [childrenProp]: (node: TreeNode<I>, prop: string) => node.getChildProxies(),
         // 子要素を開閉フラグを取得
         [isExpandedProp]: (node: TreeNode<I>, prop: string) => node.isExpanded(),
       },

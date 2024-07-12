@@ -2,7 +2,7 @@ import isPlainObject from 'lodash/isPlainObject';
 import _remove from 'lodash/remove';
 
 /**
- * lodashのremoveの拡張。predicateへオブジェクトを渡せます
+ * lodashのremoveの拡張。predicateへ削除したいプロパティ値を持つオブジェクトを渡すことができる
  * @param array
  * @param predicate
  */

@@ -1,3 +1,4 @@
+import removeAt from '../../array/removeAt';
 import TreeNode from './TreeNode';
 import { Node, TreeNodeOptions } from './types';
 
@@ -5,6 +6,11 @@ import { Node, TreeNodeOptions } from './types';
  * ツリー構造の配列をフラットな配列として扱うクラスの基底クラス
  */
 export default abstract class NodeBase<I extends object> implements Node<I> {
+  /**
+   * ネストレベル
+   */
+  protected _level: number;
+
   /**
    * 子要素
    */
@@ -26,6 +32,11 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   protected _flatProxies: I[];
 
   /**
+   * 親ノード
+   */
+  protected _parent: Node<I>;
+
+  /**
    * 子要素の有無
    */
   protected _hasChildren = false;
@@ -41,26 +52,12 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   protected _options: TreeNodeOptions<I>;
 
   /**
-   * 子要素の有無
-   */
-  hasChildren() {
-    return this._hasChildren;
-  }
-
-  /**
-   * 子要素の開閉状態
-   */
-  isExpanded() {
-    return this._isExpanded;
-  }
-
-  /**
    * 子要素を追加する
    * @param item
    * @returns
    */
-  add(item: I) {
-    const node = this._add(item);
+  addChild(item: I) {
+    const node = this._addChild(item);
     this._commit();
     return node;
   }
@@ -70,10 +67,32 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * @param items
    * @returns
    */
-  addAll(items: I[]) {
-    const nodes = items.map((item) => this._add(item));
+  addChildAll(items: I[]) {
+    const nodes = items.map((item) => this._addChild(item));
     this._commit();
     return nodes;
+  }
+
+  removeChild(item: I) {
+    const index = this._childProxies.findIndex((child) => child === item);
+    if (index > -1) {
+      removeAt(this._children, index);
+      removeAt(this._childProxies, index);
+      return removeAt(this._childNodes, index)[0];
+    }
+    return;
+  }
+
+  /**
+   * 子要素を設定する
+   * @param items
+   * @returns
+   */
+  setChildren(items: I[]) {
+    this._children = [];
+    this._childProxies = [];
+    this._childNodes = [];
+    return this.addChildAll(items);
   }
 
   /**
@@ -81,8 +100,8 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * @param item
    * @returns
    */
-  private _add(item: I) {
-    const node = new TreeNode<I>(item, this._options);
+  private _addChild(item: I) {
+    const node = new TreeNode(item, this._options);
     this._children.push(item);
     this._childProxies.push(node.getProxy());
     this._childNodes.push(node);
@@ -90,10 +109,18 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   }
 
   /**
+   * レベルの取得
+   * @returns
+   */
+  getLevel() {
+    return this._level;
+  }
+
+  /**
    * 子要素の取得
    * @returns
    */
-  getItems() {
+  getChildren() {
     return this._children;
   }
 
@@ -101,7 +128,7 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * プロキシされた子要素の取得
    * @returns
    */
-  getProxies() {
+  getChildProxies() {
     return this._childProxies;
   }
 
@@ -109,7 +136,7 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * 子ノードの取得
    * @returns
    */
-  getNodes() {
+  getChildNodes() {
     return this._childNodes;
   }
 
@@ -146,5 +173,65 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   protected _commit() {
     this._flatProxies = null;
     this._flatProxies = this.getFlatProxies();
+  }
+
+  getParent(): Node<I> {
+    return this._parent;
+  }
+
+  /**
+   * nodeの親であるか
+   * @param node
+   */
+  isParentOf(node: Node<I>) {
+    return node.isChildOf(this);
+  }
+
+  /**
+   * nodeの子であるか
+   * @param node
+   * @returns
+   */
+  isChildOf(node: Node<I>) {
+    return this._parent === node;
+  }
+
+  /**
+   * nodeの先祖であるか
+   * @param node
+   * @returns
+   */
+  isAncestorOf(node: Node<I>) {
+    return node.isDescendantOf(this);
+  }
+
+  /**
+   * nodeの子孫であるか
+   * @param node
+   * @returns
+   */
+  isDescendantOf(node: Node<I>) {
+    const parent = this._parent;
+    if (parent === node) {
+      return true;
+    } else if (parent) {
+      return parent.isDescendantOf(node);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * 子要素の有無
+   */
+  hasChildren() {
+    return this._hasChildren;
+  }
+
+  /**
+   * 子要素の開閉状態
+   */
+  isExpanded() {
+    return this._isExpanded;
   }
 }
