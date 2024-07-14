@@ -58,7 +58,7 @@ export default abstract class NodeBase<
    */
   addChild(item: I) {
     const node = this._addChild(item);
-    this._commit();
+    this.handleStateChange();
     return node;
   }
 
@@ -69,7 +69,7 @@ export default abstract class NodeBase<
    */
   addChildAll(items: I[]) {
     const nodes = items.map((item) => this._addChild(item));
-    this._commit();
+    this.handleStateChange();
     return nodes;
   }
 
@@ -152,6 +152,7 @@ export default abstract class NodeBase<
     let flatChildProxies: ProxiedItem<I, N, TN>[] = [];
     if (this._hasChildren && this._childNodes && this._isExpanded) {
       this._childNodes.forEach((child) => {
+        flatChildProxies.push(child.getProxy());
         flatChildProxies = flatChildProxies.concat(child.getFlatChildProxies());
       });
     }
@@ -166,14 +167,6 @@ export default abstract class NodeBase<
    */
   getChildNodes() {
     return this._childNodes;
-  }
-
-  /**
-   * ソート、フィルタに影響のある変更をした場合に実行するメソッド
-   */
-  protected _commit() {
-    this._flatChildProxies = null;
-    this._flatChildProxies = this.getFlatChildProxies();
   }
 
   /**
@@ -223,5 +216,16 @@ export default abstract class NodeBase<
    */
   isExpanded() {
     return this._isExpanded;
+  }
+
+  /**
+   * 行自体の表示／非表示、並び順などに影響する状態変更をした際に実行するメソッド
+   */
+  handleStateChange() {
+    if (this._flatChildProxies) {
+      this._flatChildProxies = null;
+      return true;
+    }
+    return false;
   }
 }

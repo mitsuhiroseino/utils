@@ -98,6 +98,16 @@ export default class TreeNode<
     return super.setChildren(items);
   }
 
+  expandAll() {
+    this.expand();
+    this._childNodes.forEach((child) => child.expandAll());
+  }
+
+  collapseAll() {
+    this.collapse();
+    this._childNodes.forEach((child) => child.collapseAll());
+  }
+
   /**
    * 子要素を開く
    */
@@ -117,7 +127,7 @@ export default class TreeNode<
     if (this._isExpandedProp) {
       this._item[this._isExpandedProp] = value;
     }
-    this._commit();
+    this.handleStateChange();
   }
 
   /**
@@ -194,5 +204,13 @@ export default class TreeNode<
     } else {
       return parent.isDescendantOf(node);
     }
+  }
+
+  handleStateChange() {
+    if (super.handleStateChange()) {
+      this._parent.handleStateChange();
+      return true;
+    }
+    return false;
   }
 }

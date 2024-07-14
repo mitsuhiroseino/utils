@@ -50,13 +50,20 @@ export default class Tree<
     };
   }
 
+  expandAll() {
+    this._childNodes.forEach((child) => child.expandAll());
+  }
+
+  collapseAll() {
+    this._childNodes.forEach((child) => child.collapseAll());
+  }
+
   /**
    * 子要素を開く
    */
   expand(item: ProxiedItem<I, N, TN>) {
     const node = item[TREE_NODE];
     node.expand();
-    this._commit();
   }
 
   /**
@@ -65,6 +72,5 @@ export default class Tree<
   collapse(item: ProxiedItem<I, N, TN>) {
     const node = item[TREE_NODE];
     node.collapse();
-    this._commit();
   }
 }

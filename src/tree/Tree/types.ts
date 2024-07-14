@@ -128,6 +128,11 @@ export interface Node<I extends object, N extends Node<I, N> = any, TN extends T
    * 子要素の開閉状態
    */
   isExpanded(): boolean;
+
+  /**
+   * 行自体の表示／非表示、並び順などに影響する状態変更をした際に実行するメソッド
+   */
+  handleStateChange(): boolean;
 }
 
 /**
