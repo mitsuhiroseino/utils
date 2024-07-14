@@ -1,11 +1,16 @@
 import removeAt from '../../array/removeAt';
 import TreeNode from './TreeNode';
-import { Node, TreeNodeOptions } from './types';
+import { Node, ProxiedItem, TreeNodeOptions } from './types';
 
 /**
  * ツリー構造の配列をフラットな配列として扱うクラスの基底クラス
  */
-export default abstract class NodeBase<I extends object> implements Node<I> {
+export default abstract class NodeBase<
+  I extends object,
+  N extends Node<I, N> = any,
+  TN extends TreeNode<I, N, TN> = any,
+> implements Node<I, N, TN>
+{
   /**
    * ネストレベル
    */
@@ -19,22 +24,17 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   /**
    * プロキシされた子要素
    */
-  protected _childProxies: I[];
+  protected _childProxies: ProxiedItem<I, N, TN>[];
+
+  /**
+   * 展開状態を考慮した子要素のフラットな配列
+   */
+  protected _flatChildProxies: ProxiedItem<I, N, TN>[];
 
   /**
    * 子ノード
    */
-  protected _childNodes?: TreeNode<I>[];
-
-  /**
-   * 現在のフラットな配列
-   */
-  protected _flatProxies: I[];
-
-  /**
-   * 親ノード
-   */
-  protected _parent: Node<I>;
+  protected _childNodes?: TN[];
 
   /**
    * 子要素の有無
@@ -49,7 +49,7 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   /**
    * 子要素用のオプション
    */
-  protected _options: TreeNodeOptions<I>;
+  protected _options: TreeNodeOptions<I, N>;
 
   /**
    * 子要素を追加する
@@ -101,7 +101,7 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * @returns
    */
   private _addChild(item: I) {
-    const node = new TreeNode(item, this._options);
+    const node = new TreeNode(item, this._options) as TN;
     this._children.push(item);
     this._childProxies.push(node.getProxy());
     this._childNodes.push(node);
@@ -114,6 +114,14 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    */
   getLevel() {
     return this._level;
+  }
+
+  /**
+   * ノードを取得
+   * @returns
+   */
+  getNode(): N {
+    return this as unknown as N;
   }
 
   /**
@@ -133,6 +141,26 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   }
 
   /**
+   * 開いている子要素のitemをフラットな配列として取得
+   * @returns
+   */
+  getFlatChildProxies() {
+    if (this._flatChildProxies) {
+      return this._flatChildProxies;
+    }
+
+    let flatChildProxies: ProxiedItem<I, N, TN>[] = [];
+    if (this._hasChildren && this._childNodes && this._isExpanded) {
+      this._childNodes.forEach((child) => {
+        flatChildProxies = flatChildProxies.concat(child.getFlatChildProxies());
+      });
+    }
+
+    this._flatChildProxies = flatChildProxies;
+    return flatChildProxies;
+  }
+
+  /**
    * 子ノードの取得
    * @returns
    */
@@ -141,50 +169,19 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
   }
 
   /**
-   * 開いている子要素のitemをフラットな配列として取得する
-   * @returns
-   */
-  abstract getFlatProxies(): I[];
-
-  /**
-   * 開いている子要素のitemをフラットな配列として取得する
-   * @param proxy 自身のプロキシ
-   * @returns
-   */
-  protected _getFlatProxies(proxy?: I) {
-    if (this._flatProxies) {
-      return this._flatProxies;
-    }
-
-    let flatProxies: I[] = proxy ? [proxy] : [];
-    if (this._hasChildren && this._childNodes && this._isExpanded) {
-      this._childNodes.forEach((child) => {
-        flatProxies = flatProxies.concat(child.getFlatProxies());
-      });
-    }
-
-    this._flatProxies = flatProxies;
-    return flatProxies;
-  }
-
-  /**
-   * フラットなプロキシに更新が必要になる場合に実行するメソッド
+   * ソート、フィルタに影響のある変更をした場合に実行するメソッド
    */
   protected _commit() {
-    this._flatProxies = null;
-    this._flatProxies = this.getFlatProxies();
-  }
-
-  getParent(): Node<I> {
-    return this._parent;
+    this._flatChildProxies = null;
+    this._flatChildProxies = this.getFlatChildProxies();
   }
 
   /**
    * nodeの親であるか
    * @param node
    */
-  isParentOf(node: Node<I>) {
-    return node.isChildOf(this);
+  isParentOf(node: N) {
+    return node.isChildOf(this as unknown as N);
   }
 
   /**
@@ -192,8 +189,8 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * @param node
    * @returns
    */
-  isChildOf(node: Node<I>) {
-    return this._parent === node;
+  isChildOf(node: N) {
+    return false;
   }
 
   /**
@@ -201,8 +198,8 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * @param node
    * @returns
    */
-  isAncestorOf(node: Node<I>) {
-    return node.isDescendantOf(this);
+  isAncestorOf(node: N) {
+    return node.isDescendantOf(this as unknown as N);
   }
 
   /**
@@ -210,15 +207,8 @@ export default abstract class NodeBase<I extends object> implements Node<I> {
    * @param node
    * @returns
    */
-  isDescendantOf(node: Node<I>) {
-    const parent = this._parent;
-    if (parent === node) {
-      return true;
-    } else if (parent) {
-      return parent.isDescendantOf(node);
-    } else {
-      return false;
-    }
+  isDescendantOf(node: N) {
+    return false;
   }
 
   /**

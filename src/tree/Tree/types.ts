@@ -1,18 +1,19 @@
 import TreeNode from './TreeNode';
+import { TREE_NODE } from './constans';
 
 /**
- * FlatTreeのオプション
+ * Treeのオプション
  */
-export type FlatTreeOptions = NodeOptionsBase & {};
+export type TreeOptions = NodeOptionsBase & {};
 
 /**
  * TreeNodeのオプション
  */
-export type TreeNodeOptions<I extends object> = NodeOptionsBase & {
+export type TreeNodeOptions<I extends object, N extends Node<I, N> = any> = NodeOptionsBase & {
   /**
    * 親ノード
    */
-  parent?: Node<I>;
+  parent?: N;
 
   /**
    * プロキシのハンドラー
@@ -37,30 +38,30 @@ export type NodeOptionsBase = {
   isExpandedProp?: string;
 };
 
-export interface Node<I extends object> {
+export interface Node<I extends object, N extends Node<I, N> = any, TN extends TreeNode<I, N, TN> = any> {
   /**
    * 子要素を追加する
    * @param item
    */
-  addChild(item: I): TreeNode<I>;
+  addChild(item: I): TN;
 
   /**
    * 子要素を纏めて追加する
    * @param items
    */
-  addChildAll(items: I[]): TreeNode<I>[];
+  addChildAll(items: I[]): TN[];
 
   /**
    * 子要素を設定する
    * @param items
    */
-  setChildren(items: I[]): TreeNode<I>[];
+  setChildren(items: I[]): TN[];
 
   /**
    * 子要素を削除する
    * @param item プロキシされた子要素
    */
-  removeChild(item: I): Node<I> | undefined;
+  removeChild(item: I): TN | undefined;
 
   /**
    * ネストレベル
@@ -77,50 +78,46 @@ export interface Node<I extends object> {
    * プロキシされた子要素の取得
    * @returns
    */
-  getChildProxies(): I[];
+  getChildProxies(): ProxiedItem<I, N, TN>[];
+
+  /**
+   * 開いている子要素のプロキシをフラットな配列として取得
+   * @returns
+   */
+  getFlatChildProxies(): ProxiedItem<I, N, TN>[];
 
   /**
    * 子ノードの取得
    * @returns
    */
-  getChildNodes(): TreeNode<I>[];
-
-  /**
-   * 開いている子要素のプロキシをフラットな配列として取得する
-   */
-  getFlatProxies(): I[];
-
-  /**
-   * 親を取得する
-   */
-  getParent(): Node<I>;
+  getChildNodes(): TN[];
 
   /**
    * nodeの親であるか
    * @param node
    */
-  isParentOf(node: Node<I>): boolean;
+  isParentOf(node: N): boolean;
 
   /**
    * nodeの子であるか
    * @param node
    * @returns
    */
-  isChildOf(node: Node<I>): boolean;
+  isChildOf(node: N): boolean;
 
   /**
    * nodeの先祖であるか
    * @param node
    * @returns
    */
-  isAncestorOf(node: Node<I>): boolean;
+  isAncestorOf(node: N): boolean;
 
   /**
    * nodeの子孫であるか
    * @param node
    * @returns
    */
-  isDescendantOf(node: Node<I>): boolean;
+  isDescendantOf(node: N): boolean;
 
   /**
    * 子要素の有無
@@ -132,3 +129,22 @@ export interface Node<I extends object> {
    */
   isExpanded(): boolean;
 }
+
+/**
+ * プロキシで処理を行うハンドラー
+ */
+export type ProxyHandlers<I extends object, N extends Node<I, N> = any, TN extends TreeNode<I, N, TN> = any> = {
+  get: {
+    [key: string | symbol]: (node: TN, prop: string | symbol) => unknown;
+  };
+  set: {
+    [key: string | symbol]: (node: TN, prop: string | symbol, newValue: unknown) => boolean;
+  };
+};
+
+export type ProxiedItem<I extends object, N extends Node<I, N> = any, TN extends TreeNode<I, N, TN> = any> = I & {
+  /**
+   * ツリーノード
+   */
+  [TREE_NODE]: TN;
+};
