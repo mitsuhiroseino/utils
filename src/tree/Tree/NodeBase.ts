@@ -196,7 +196,7 @@ export default abstract class NodeBase<
     }
 
     let flatChildProxies: ProxiedItem<I, N, CN>[] = [];
-    const childNodes = this._childNodes;
+    const childNodes = this.getChildNodes();
     if (this._hasChildren && childNodes && this._isExpanded) {
       childNodes.forEach((child) => {
         flatChildProxies.push(child.getProxy());
@@ -212,7 +212,7 @@ export default abstract class NodeBase<
    * 子ノードの取得
    * @returns
    */
-  getChildNodes() {
+  getChildNodes(): CN[] {
     if (!this._childNodes) {
       this._createChildren();
     }

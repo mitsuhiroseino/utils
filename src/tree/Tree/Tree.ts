@@ -8,8 +8,8 @@ import { Node, ProxiedItem, ProxyHandlers, TreeOptions } from './types';
  */
 export default class Tree<
   I extends object,
-  N extends Node<I, N> = any,
-  CN extends TreeNode<I, N, CN> = any,
+  N extends Node<I, N> = Node<I, any>,
+  CN extends TreeNode<I, N, CN> = TreeNode<I, N, any>,
 > extends NodeBase<I, N, CN> {
   /**
    * コンストラクター

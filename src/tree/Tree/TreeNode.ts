@@ -5,7 +5,11 @@ import { ChildNode, Node, ProxiedItem, ProxyHandlers, TreeNodeOptions } from './
 /**
  * ツリーのノード
  */
-export default class TreeNode<I extends object, N extends Node<I, N> = any, CN extends TreeNode<I, N, CN> = any>
+export default class TreeNode<
+    I extends object,
+    N extends Node<I, N> = Node<I, any>,
+    CN extends TreeNode<I, N, CN> = TreeNode<I, N, any>,
+  >
   extends NodeBase<I, N, CN>
   implements ChildNode<I, N, CN>
 {
@@ -51,7 +55,6 @@ export default class TreeNode<I extends object, N extends Node<I, N> = any, CN e
    * @returns
    */
   private _proxyItem(item: I, handlers: ProxyHandlers<I, N, CN>): ProxiedItem<I, N, CN> {
-    console.log('handlers', handlers);
     return new Proxy(item, {
       get: (target, prop, receiver) => {
         const handler = handlers.get[prop];
@@ -85,13 +88,15 @@ export default class TreeNode<I extends object, N extends Node<I, N> = any, CN e
 
   expandAll() {
     return this.expand().then(() => {
-      return Promise.all(this.getChildNodes().map((child) => child.expandAll()));
+      const childNodes = this.getChildNodes() || [];
+      return Promise.all(childNodes.map((child) => child.expandAll()));
     });
   }
 
   collapseAll() {
     return this.collapse().then(() => {
-      return Promise.all(this.getChildNodes().map((child) => child.collapseAll()));
+      const childNodes = this.getChildNodes() || [];
+      return Promise.all(childNodes.map((child) => child.collapseAll()));
     });
   }
 
@@ -99,14 +104,18 @@ export default class TreeNode<I extends object, N extends Node<I, N> = any, CN e
    * 子要素を開く
    */
   expand() {
+    if (!this.hasChildren()) {
+      return Promise.resolve([]);
+    }
     if (this._canLoad()) {
       return this._options.loadChildren(this.getItem()).then((items) => {
         this._setChildren(items);
         this.setExpanded(true);
+        return this.getChildNodes();
       });
     } else {
       this.setExpanded(true);
-      return Promise.resolve();
+      return Promise.resolve(this.getChildNodes());
     }
   }
 
@@ -123,10 +132,13 @@ export default class TreeNode<I extends object, N extends Node<I, N> = any, CN e
    */
   collapse() {
     this.setExpanded(false);
-    return Promise.resolve();
+    return Promise.resolve(this.getChildNodes() || []);
   }
 
   setExpanded(value: boolean) {
+    if (!this.hasChildren()) {
+      return;
+    }
     const item = this.getItem();
     this._isExpanded = value;
     const isExpandedProp = this._options.isExpandedProp;

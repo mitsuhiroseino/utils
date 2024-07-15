@@ -66,12 +66,12 @@ export interface ChildNode<I extends object, N extends Node<I, N> = any, CN exte
   /**
    * 子要素を開く
    */
-  expand(): Promise<void>;
+  expand(): Promise<CN[]>;
 
   /**
    * 子要素を閉じる
    */
-  collapse(): Promise<void>;
+  collapse(): Promise<CN[]>;
 
   /**
    * 子要素を全て開く
