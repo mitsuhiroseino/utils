@@ -1,4 +1,3 @@
-import TreeNode from './TreeNode';
 import { TREE_NODE } from './constans';
 
 /**
@@ -59,30 +58,76 @@ export type NodeOptionsBase<I extends object> = {
   onCollapse?: (item: I) => void;
 };
 
-export interface Node<I extends object, N extends Node<I, N> = any, TN extends TreeNode<I, N, TN> = any> {
+/**
+ * 子ノード
+ */
+export interface ChildNode<I extends object, N extends Node<I, N> = any, CN extends ChildNode<I, N, CN> = any>
+  extends Node<I, N, CN> {
+  /**
+   * 子要素を開く
+   */
+  expand(): Promise<void>;
+
+  /**
+   * 子要素を閉じる
+   */
+  collapse(): Promise<void>;
+
+  /**
+   * 子要素を全て開く
+   */
+  expandAll(): Promise<void>;
+
+  /**
+   * 子要素を全て閉じる
+   */
+  collapseAll(): Promise<void>;
+
+  /**
+   * 自身を親から削除する
+   */
+  remove(): void;
+
+  /**
+   * 要素を取得
+   * @returns
+   */
+  getItem(): I;
+
+  /**
+   * プロキシを取得
+   * @returns
+   */
+  getProxy(): ProxiedItem<I>;
+}
+
+/**
+ * ノード
+ */
+export interface Node<I extends object, N extends Node<I, N> = any, CN extends ChildNode<I, N, CN> = any> {
   /**
    * 子要素を追加する
    * @param item
    */
-  addChild(item: I): TN;
+  addChild(item: I): CN;
 
   /**
    * 子要素を纏めて追加する
    * @param items
    */
-  addChildAll(items: I[]): TN[];
+  addChildAll(items: I[]): CN[];
 
   /**
    * 子要素を設定する
    * @param items
    */
-  setChildren(items: I[]): TN[];
+  setChildren(items: I[]): CN[];
 
   /**
    * 子要素を削除する
    * @param item プロキシされた子要素
    */
-  removeChild(item: I): TN | undefined;
+  removeChild(item: I): CN | undefined;
 
   /**
    * ネストレベル
@@ -99,19 +144,19 @@ export interface Node<I extends object, N extends Node<I, N> = any, TN extends T
    * プロキシされた子要素の取得
    * @returns
    */
-  getChildProxies(): ProxiedItem<I, N, TN>[];
+  getChildProxies(): ProxiedItem<I, N, CN>[];
 
   /**
    * 開いている子要素のプロキシをフラットな配列として取得
    * @returns
    */
-  getFlatChildProxies(): ProxiedItem<I, N, TN>[];
+  getFlatChildProxies(): ProxiedItem<I, N, CN>[];
 
   /**
    * 子ノードの取得
    * @returns
    */
-  getChildNodes(): TN[];
+  getChildNodes(): CN[];
 
   /**
    * nodeの親であるか
@@ -159,18 +204,18 @@ export interface Node<I extends object, N extends Node<I, N> = any, TN extends T
 /**
  * プロキシで処理を行うハンドラー
  */
-export type ProxyHandlers<I extends object, N extends Node<I, N> = any, TN extends TreeNode<I, N, TN> = any> = {
+export type ProxyHandlers<I extends object, N extends Node<I, N> = any, CN extends ChildNode<I, N, CN> = any> = {
   get: {
-    [key: string | symbol]: (node: TN, prop: string | symbol) => unknown;
+    [key: string | symbol]: (node: CN, prop: string | symbol) => unknown;
   };
   set: {
-    [key: string | symbol]: (node: TN, prop: string | symbol, newValue: unknown) => boolean;
+    [key: string | symbol]: (node: CN, prop: string | symbol, newValue: unknown) => boolean;
   };
 };
 
-export type ProxiedItem<I extends object, N extends Node<I, N> = any, TN extends TreeNode<I, N, TN> = any> = I & {
+export type ProxiedItem<I extends object, N extends Node<I, N> = any, CN extends ChildNode<I, N, CN> = any> = I & {
   /**
    * ツリーノード
    */
-  [TREE_NODE]: TN;
+  [TREE_NODE]: CN;
 };

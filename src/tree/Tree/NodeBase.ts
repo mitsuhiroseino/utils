@@ -1,6 +1,5 @@
 import removeAt from '../../array/removeAt';
-import TreeNode from './TreeNode';
-import { Node, ProxiedItem, TreeNodeOptions } from './types';
+import { ChildNode, Node, ProxiedItem, TreeNodeOptions } from './types';
 
 /**
  * ツリー構造の配列をフラットな配列として扱うクラスの基底クラス
@@ -8,8 +7,8 @@ import { Node, ProxiedItem, TreeNodeOptions } from './types';
 export default abstract class NodeBase<
   I extends object,
   N extends Node<I, N> = any,
-  TN extends TreeNode<I, N, TN> = any,
-> implements Node<I, N, TN>
+  CN extends ChildNode<I, N, CN> = any,
+> implements Node<I, N, CN>
 {
   /**
    * ネストレベル
@@ -24,17 +23,17 @@ export default abstract class NodeBase<
   /**
    * プロキシされた子要素
    */
-  protected _childProxies: ProxiedItem<I, N, TN>[];
+  protected _childProxies: ProxiedItem<I, N, CN>[];
 
   /**
    * 展開状態を考慮した子要素のフラットな配列
    */
-  protected _flatChildProxies: ProxiedItem<I, N, TN>[];
+  protected _flatChildProxies: ProxiedItem<I, N, CN>[];
 
   /**
    * 子ノード
    */
-  protected _childNodes?: TN[];
+  protected _childNodes?: CN[];
 
   /**
    * 子要素の有無
@@ -123,7 +122,7 @@ export default abstract class NodeBase<
    */
   private _addChild(item: I) {
     this._children.push(item);
-    const node = this._createTreeNode(item);
+    const node = this._createChildNode(item);
     this._childProxies.push(node.getProxy());
     this._childNodes.push(node);
     return node;
@@ -137,16 +136,14 @@ export default abstract class NodeBase<
     const children = this.getChildren();
     if (children) {
       children.map((item) => {
-        const node = this._createTreeNode(item);
+        const node = this._createChildNode(item);
         this._childProxies.push(node.getProxy());
         this._childNodes.push(node);
       });
     }
   }
 
-  protected _createTreeNode(item: I) {
-    return new TreeNode(item, this._options) as TN;
-  }
+  protected abstract _createChildNode(item: I): CN;
 
   /**
    * レベルの取得
@@ -192,7 +189,7 @@ export default abstract class NodeBase<
       return this._flatChildProxies;
     }
 
-    let flatChildProxies: ProxiedItem<I, N, TN>[] = [];
+    let flatChildProxies: ProxiedItem<I, N, CN>[] = [];
     const childNodes = this._childNodes;
     if (this._hasChildren && childNodes && this._isExpanded) {
       childNodes.forEach((child) => {

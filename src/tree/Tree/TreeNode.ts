@@ -1,15 +1,14 @@
 import { DEFAULT_PROPS } from './constans';
 import NodeBase from './NodeBase';
-import { Node, ProxiedItem, ProxyHandlers, TreeNodeOptions } from './types';
+import { ChildNode, Node, ProxiedItem, ProxyHandlers, TreeNodeOptions } from './types';
 
 /**
  * ツリーのノード
  */
-export default class TreeNode<
-  I extends object,
-  N extends Node<I, N> = any,
-  TN extends TreeNode<I, N, TN> = any,
-> extends NodeBase<I, N, TN> {
+export default class TreeNode<I extends object, N extends Node<I, N> = any, CN extends TreeNode<I, N, CN> = any>
+  extends NodeBase<I, N, CN>
+  implements ChildNode<I, N, CN>
+{
   /**
    * 元の要素
    */
@@ -18,7 +17,7 @@ export default class TreeNode<
   /**
    * プロキシされた要素
    */
-  private _proxy: ProxiedItem<I, N, TN>;
+  private _proxy: ProxiedItem<I, N, CN>;
 
   /**
    * 親ノード
@@ -53,7 +52,7 @@ export default class TreeNode<
    * @param handlers
    * @returns
    */
-  private _proxyItem(item: I, handlers: ProxyHandlers<I, N, TN>): ProxiedItem<I, N, TN> {
+  private _proxyItem(item: I, handlers: ProxyHandlers<I, N, CN>): ProxiedItem<I, N, CN> {
     return new Proxy(item, {
       get: (target, prop, receiver) => {
         const handler = handlers.get[prop];
@@ -73,14 +72,14 @@ export default class TreeNode<
         // ハンドラーが無い場合は通常の処理
         return Reflect.set(target, prop, newValue, receiver);
       },
-    }) as ProxiedItem<I, N, TN>;
+    }) as ProxiedItem<I, N, CN>;
   }
 
   remove(): void {
     this._parent.removeChild(this.getProxy());
   }
 
-  setChildren(items: I[]): TN[] {
+  setChildren(items: I[]): CN[] {
     this._item[this._options.childrenProp] = items;
     return super.setChildren(items);
   }
@@ -166,7 +165,7 @@ export default class TreeNode<
    * @returns
    */
   getTreeNode() {
-    return this as unknown as TN;
+    return this as unknown as CN;
   }
 
   /**
@@ -227,5 +226,9 @@ export default class TreeNode<
       return true;
     }
     return false;
+  }
+
+  protected _createChildNode(item: I) {
+    return new TreeNode(item, this._options) as unknown as CN;
   }
 }

@@ -9,8 +9,8 @@ import { Node, ProxiedItem, ProxyHandlers, TreeOptions } from './types';
 export default class Tree<
   I extends object,
   N extends Node<I, N> = any,
-  TN extends TreeNode<I, N, TN> = any,
-> extends NodeBase<I, N, TN> {
+  CN extends TreeNode<I, N, CN> = any,
+> extends NodeBase<I, N, CN> {
   /**
    * コンストラクター
    * @param items
@@ -36,7 +36,7 @@ export default class Tree<
   private _createProxyHandlers(
     childrenProp: string,
     isExpandedProp: string = DEFAULT_PROPS.IS_EXPANDED,
-  ): ProxyHandlers<I, N, TN> {
+  ): ProxyHandlers<I, N, CN> {
     return {
       get: {
         // ノードの取得
@@ -61,7 +61,7 @@ export default class Tree<
   /**
    * 子要素を開く
    */
-  expand(item: ProxiedItem<I, N, TN>) {
+  expand(item: ProxiedItem<I, N, CN>) {
     const node = item[TREE_NODE];
     return node.expand();
   }
@@ -69,8 +69,12 @@ export default class Tree<
   /**
    * 子要素を閉じる
    */
-  collapse(item: ProxiedItem<I, N, TN>) {
+  collapse(item: ProxiedItem<I, N, CN>) {
     const node = item[TREE_NODE];
     return node.collapse();
+  }
+
+  protected _createChildNode(item: I) {
+    return new TreeNode(item, this._options) as unknown as CN;
   }
 }
