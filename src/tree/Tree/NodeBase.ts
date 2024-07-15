@@ -107,7 +107,11 @@ export default abstract class NodeBase<
       this.setChildren(items);
     } else {
       // 子要素を開いていない時はitemのみ設定
-      this._children = items.concat([]);
+      if (items) {
+        this._children = items.concat([]);
+      } else {
+        this._children = null;
+      }
       this._childProxies = null;
       this._childNodes = null;
       this.handleStateChange();
@@ -135,6 +139,8 @@ export default abstract class NodeBase<
   protected _createChildren() {
     const children = this.getChildren();
     if (children) {
+      this._childProxies = [];
+      this._childNodes = [];
       children.map((item) => {
         const node = this._createChildNode(item);
         this._childProxies.push(node.getProxy());

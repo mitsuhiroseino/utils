@@ -26,8 +26,8 @@ export default class TreeNode<I extends object, N extends Node<I, N> = any, CN e
 
   constructor(item: I, options: TreeNodeOptions<I, N> = {}) {
     super();
-    const { parent, childrenProp = DEFAULT_PROPS.CHILDREN, isExpandedProp, proxyHandlers, ...rest } = options;
-    this._options = { ...rest, parent: this.getNode() };
+    const { parent, childrenProp = DEFAULT_PROPS.CHILDREN, isExpandedProp, proxyHandlers } = options;
+    this._options = { ...options, parent: this.getNode() };
     // 受け取ったものを保持
     this._item = item;
     this._parent = parent;
@@ -40,9 +40,7 @@ export default class TreeNode<I extends object, N extends Node<I, N> = any, CN e
     const children = item[childrenProp];
     if (children !== undefined) {
       this._hasChildren = true;
-      if (children !== null) {
-        this._setChildren(children);
-      }
+      this._setChildren(children);
     }
   }
 
@@ -53,6 +51,7 @@ export default class TreeNode<I extends object, N extends Node<I, N> = any, CN e
    * @returns
    */
   private _proxyItem(item: I, handlers: ProxyHandlers<I, N, CN>): ProxiedItem<I, N, CN> {
+    console.log('handlers', handlers);
     return new Proxy(item, {
       get: (target, prop, receiver) => {
         const handler = handlers.get[prop];
