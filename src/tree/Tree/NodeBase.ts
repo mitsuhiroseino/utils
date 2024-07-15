@@ -74,17 +74,20 @@ export default abstract class NodeBase<
   }
 
   removeChild(item: I) {
-    const index = this._childProxies.findIndex((child) => child === item);
-    if (index > -1) {
-      removeAt(this._children, index);
-      removeAt(this._childProxies, index);
-      return removeAt(this._childNodes, index)[0];
+    const childProxies = this._childProxies;
+    if (childProxies) {
+      const index = childProxies.findIndex((child) => child === item);
+      if (index > -1) {
+        removeAt(this.getChildren(), index);
+        removeAt(childProxies, index);
+        return removeAt(this.getChildNodes(), index)[0];
+      }
     }
     return;
   }
 
   /**
-   * 子要素を設定する
+   * 子要素を設定しproxyとnodeを作成する
    * @param items
    * @returns
    */
@@ -96,16 +99,53 @@ export default abstract class NodeBase<
   }
 
   /**
+   * 子要素を設定する
+   * @param items
+   * @returns
+   */
+  protected _setChildren(items: I[]): void {
+    if (this._isExpanded) {
+      this.setChildren(items);
+    } else {
+      // 子要素を開いていない時はitemのみ設定
+      this._children = items.concat([]);
+      this._childProxies = null;
+      this._childNodes = null;
+      this.handleStateChange();
+    }
+  }
+
+  /**
    * 子要素を追加する
    * @param item
+   * @param excludingItems
    * @returns
    */
   private _addChild(item: I) {
-    const node = new TreeNode(item, this._options) as TN;
     this._children.push(item);
+    const node = this._createTreeNode(item);
     this._childProxies.push(node.getProxy());
     this._childNodes.push(node);
     return node;
+  }
+
+  /**
+   * 子要素のproxyとnodeを纏めて作成する
+   * @returns
+   */
+  protected _createChildren() {
+    const children = this.getChildren();
+    if (children) {
+      children.map((item) => {
+        const node = this._createTreeNode(item);
+        this._childProxies.push(node.getProxy());
+        this._childNodes.push(node);
+      });
+    }
+  }
+
+  protected _createTreeNode(item: I) {
+    return new TreeNode(item, this._options) as TN;
   }
 
   /**
@@ -137,6 +177,9 @@ export default abstract class NodeBase<
    * @returns
    */
   getChildProxies() {
+    if (!this._childProxies) {
+      this._createChildren();
+    }
     return this._childProxies;
   }
 
@@ -150,8 +193,9 @@ export default abstract class NodeBase<
     }
 
     let flatChildProxies: ProxiedItem<I, N, TN>[] = [];
-    if (this._hasChildren && this._childNodes && this._isExpanded) {
-      this._childNodes.forEach((child) => {
+    const childNodes = this._childNodes;
+    if (this._hasChildren && childNodes && this._isExpanded) {
+      childNodes.forEach((child) => {
         flatChildProxies.push(child.getProxy());
         flatChildProxies = flatChildProxies.concat(child.getFlatChildProxies());
       });
@@ -166,6 +210,9 @@ export default abstract class NodeBase<
    * @returns
    */
   getChildNodes() {
+    if (!this._childNodes) {
+      this._createChildren();
+    }
     return this._childNodes;
   }
 

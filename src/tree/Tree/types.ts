@@ -4,12 +4,12 @@ import { TREE_NODE } from './constans';
 /**
  * Treeのオプション
  */
-export type TreeOptions = NodeOptionsBase & {};
+export type TreeOptions<I extends object> = NodeOptionsBase<I> & {};
 
 /**
  * TreeNodeのオプション
  */
-export type TreeNodeOptions<I extends object, N extends Node<I, N> = any> = NodeOptionsBase & {
+export type TreeNodeOptions<I extends object, N extends Node<I, N> = any> = NodeOptionsBase<I> & {
   /**
    * 親ノード
    */
@@ -24,7 +24,7 @@ export type TreeNodeOptions<I extends object, N extends Node<I, N> = any> = Node
 /**
  * 機能共通のオプション
  */
-export type NodeOptionsBase = {
+export type NodeOptionsBase<I extends object> = {
   /**
    * 子要素の配列が設定されている配列要素のプロパティの名称
    * デフォルトはchildren
@@ -36,6 +36,27 @@ export type NodeOptionsBase = {
    * デフォルトはisExpanded
    */
   isExpandedProp?: string;
+
+  /**
+   * 子要素のロード処理
+   * itemのchildrenにnullが設定されいてる場合に実行される
+   * @param item
+   */
+  loadChildren?: (item: I) => Promise<I[]>;
+
+  /**
+   * 子要素を開いたときのイベントハンドラー
+   * @param item
+   * @returns
+   */
+  onExpand?: (item: I) => void;
+
+  /**
+   * 子要素を閉じたときのイベントハンドラー
+   * @param item
+   * @returns
+   */
+  onCollapse?: (item: I) => void;
 };
 
 export interface Node<I extends object, N extends Node<I, N> = any, TN extends TreeNode<I, N, TN> = any> {

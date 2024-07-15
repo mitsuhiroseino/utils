@@ -16,7 +16,7 @@ export default class Tree<
    * @param items
    * @param options
    */
-  constructor(items: I[], options: TreeOptions = {}) {
+  constructor(items: I[], options: TreeOptions<I> = {}) {
     super();
     const { childrenProp = DEFAULT_PROPS.CHILDREN, isExpandedProp, ...rest } = options;
     this._hasChildren = true;
@@ -24,7 +24,7 @@ export default class Tree<
     this._level = -1;
     const proxyHandlers = this._createProxyHandlers(childrenProp, isExpandedProp);
     this._options = { ...rest, childrenProp, isExpandedProp, proxyHandlers, parent: this.getNode() };
-    this.setChildren(items);
+    this._setChildren(items);
   }
 
   /**
@@ -51,11 +51,11 @@ export default class Tree<
   }
 
   expandAll() {
-    this._childNodes.forEach((child) => child.expandAll());
+    return Promise.all(this.getChildNodes().map((child) => child.expandAll()));
   }
 
   collapseAll() {
-    this._childNodes.forEach((child) => child.collapseAll());
+    return Promise.all(this.getChildNodes().map((child) => child.collapseAll()));
   }
 
   /**
@@ -63,7 +63,7 @@ export default class Tree<
    */
   expand(item: ProxiedItem<I, N, TN>) {
     const node = item[TREE_NODE];
-    node.expand();
+    return node.expand();
   }
 
   /**
@@ -71,6 +71,6 @@ export default class Tree<
    */
   collapse(item: ProxiedItem<I, N, TN>) {
     const node = item[TREE_NODE];
-    node.collapse();
+    return node.collapse();
   }
 }

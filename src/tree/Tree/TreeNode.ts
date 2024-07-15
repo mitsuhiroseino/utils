@@ -25,26 +25,12 @@ export default class TreeNode<
    */
   protected _parent: N;
 
-  /**
-   * 子要素のプロパティ名
-   */
-  private _childrenProp: string;
-
-  /**
-   * 子要素の展開状態のプロパティ名
-   */
-  private _isExpandedProp: string;
-
   constructor(item: I, options: TreeNodeOptions<I, N> = {}) {
     super();
     const { parent, childrenProp = DEFAULT_PROPS.CHILDREN, isExpandedProp, proxyHandlers, ...rest } = options;
     this._options = { ...rest, parent: this.getNode() };
     // 受け取ったものを保持
-    this._childrenProp = childrenProp;
-    this._isExpandedProp = isExpandedProp;
     this._item = item;
-    const children = item[childrenProp];
-    this._children = children;
     this._parent = parent;
     this._isExpanded = isExpandedProp ? !!item[isExpandedProp] : false;
     // レベルを設定
@@ -52,10 +38,11 @@ export default class TreeNode<
     // itemのプロキシを作成
     this._proxy = this._proxyItem(item, proxyHandlers);
     // 子要素もNodeインスタンスを作る
+    const children = item[childrenProp];
     if (children !== undefined) {
       this._hasChildren = true;
       if (children !== null) {
-        this.setChildren(children);
+        this._setChildren(children);
       }
     }
   }
@@ -94,25 +81,43 @@ export default class TreeNode<
   }
 
   setChildren(items: I[]): TN[] {
-    this._item[this._childrenProp] = items;
+    this._item[this._options.childrenProp] = items;
     return super.setChildren(items);
   }
 
   expandAll() {
-    this.expand();
-    this._childNodes.forEach((child) => child.expandAll());
+    return this.expand().then(() => {
+      return Promise.all(this.getChildNodes().map((child) => child.expandAll()));
+    });
   }
 
   collapseAll() {
-    this.collapse();
-    this._childNodes.forEach((child) => child.collapseAll());
+    return this.collapse().then(() => {
+      return Promise.all(this.getChildNodes().map((child) => child.collapseAll()));
+    });
   }
 
   /**
    * 子要素を開く
    */
   expand() {
-    this.setExpanded(true);
+    if (this._canLoad()) {
+      return this._options.loadChildren(this.getItem()).then((items) => {
+        this._setChildren(items);
+        this.setExpanded(true);
+      });
+    } else {
+      this.setExpanded(true);
+      return Promise.resolve();
+    }
+  }
+
+  /**
+   * 子要素のロードが可能か
+   * @returns
+   */
+  private _canLoad() {
+    return this._hasChildren && !this._children && this._options.loadChildren;
   }
 
   /**
@@ -120,14 +125,24 @@ export default class TreeNode<
    */
   collapse() {
     this.setExpanded(false);
+    return Promise.resolve();
   }
 
   setExpanded(value: boolean) {
+    const item = this.getItem();
     this._isExpanded = value;
-    if (this._isExpandedProp) {
-      this._item[this._isExpandedProp] = value;
+    const isExpandedProp = this._options.isExpandedProp;
+    if (isExpandedProp) {
+      item[isExpandedProp] = value;
     }
     this.handleStateChange();
+
+    const { onExpand, onCollapse } = this._options;
+    if (value && onExpand) {
+      onExpand(item);
+    } else if (!value && onCollapse) {
+      onCollapse(item);
+    }
   }
 
   /**
