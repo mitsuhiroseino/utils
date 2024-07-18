@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep';
 import Tree from 'src/tree/Tree';
-import { ITEMS } from './constants';
+import { ITEMS, getLoader } from './constants';
 import toEqualNodesWith from './toEqualNodesWith';
 
 describe('Tree', () => {
@@ -32,10 +32,10 @@ describe('Tree', () => {
 
       test('expand', () => {
         const nodes = tree.getChildNodes();
-        return nodes[0].expand().then((nodes) => {
+        return nodes[0].expand().then((childNodes) => {
           const result1 = tree.getFlatChildProxies();
           expect(result1.length).toBe(7);
-          return nodes[0].expand().then(() => {
+          return childNodes[0].expand().then(() => {
             const result2 = tree.getFlatChildProxies();
             expect(result2.length).toBe(10);
           });
@@ -44,7 +44,7 @@ describe('Tree', () => {
 
       test('collapse', () => {
         const nodes = tree.getChildNodes();
-        return nodes[0].collapse().then((nodes) => {
+        return nodes[0].collapse().then(() => {
           const result1 = tree.getFlatChildProxies();
           expect(result1.length).toBe(4);
         });
@@ -79,6 +79,51 @@ describe('Tree', () => {
         return nodes[3].collapseAll().then(() => {
           const result1 = tree.getFlatChildProxies();
           expect(result1.length).toBe(4);
+        });
+      });
+    });
+
+    describe('loadChildren', () => {
+      describe('expand & collapse', () => {
+        const items = cloneDeep(ITEMS);
+        const tree = new Tree(items, { loadChildren: getLoader(2) });
+
+        test('expand', () => {
+          const nodes = tree.getChildNodes();
+          return nodes[1].expand().then((childNodes) => {
+            expect(childNodes.length).toBe(2);
+            const result1 = tree.getFlatChildProxies();
+            expect(result1.length).toBe(6);
+          });
+        });
+
+        test('collapse', () => {
+          const nodes = tree.getChildNodes();
+          return nodes[1].collapse().then(() => {
+            const result1 = tree.getFlatChildProxies();
+            expect(result1.length).toBe(4);
+          });
+        });
+      });
+
+      describe('expandAll & collapseAll', () => {
+        const items = cloneDeep(ITEMS);
+        const tree = new Tree(items, { loadChildren: getLoader(2) });
+
+        test('expandAll', () => {
+          const nodes = tree.getChildNodes();
+          return nodes[3].expandAll().then(() => {
+            const result1 = tree.getFlatChildProxies();
+            expect(result1.length).toBe(12);
+          });
+        });
+
+        test('collapseAll', () => {
+          const nodes = tree.getChildNodes();
+          return nodes[3].collapseAll().then(() => {
+            const result1 = tree.getFlatChildProxies();
+            expect(result1.length).toBe(4);
+          });
         });
       });
     });

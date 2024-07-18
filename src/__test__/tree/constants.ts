@@ -36,3 +36,13 @@ export const ITEMS = [
     ],
   },
 ];
+
+export function getLoader(size: number) {
+  return async (item: any) => {
+    const children = [];
+    for (let i = 0; i < size; i++) {
+      children.push({ id: `${item.id}-${i}`, name: `${item.name}-${i}` });
+    }
+    return children;
+  };
+}

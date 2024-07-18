@@ -1,7 +1,8 @@
+import isEqual from 'lodash/isEqual';
 import { TreeNode } from 'src/tree/Tree';
 
 const DEFAULT_MATCHER = (item: any, node: TreeNode<any>) => {
-  return item.id === node.getValue('id');
+  return item.id === node.getValue('id') && isEqual(item, node.getItem()) && isEqual(item, node.getProxy());
 };
 
 type Options = {
