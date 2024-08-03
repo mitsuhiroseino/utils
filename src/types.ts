@@ -3,7 +3,7 @@ import { IdentifiableProps } from './identifier';
 /**
  * 任意のオブジェクト
  */
-export type AnyObject<V = any> = Record<string, V>;
+export type AnyObject<V = any> = Record<string | number | symbol, V>;
 
 /**
  * 任意のオプション
