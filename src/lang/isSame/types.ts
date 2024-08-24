@@ -31,7 +31,7 @@ export type IsSameOptions = {
   customizer?: (
     value1: any,
     value2: any,
-    indexOrKey?: string | number | symbol | undefined,
+    indexOrKey?: PropertyKey | undefined,
     value1Parent?: any,
     value2Parent?: any,
     stack?: any,

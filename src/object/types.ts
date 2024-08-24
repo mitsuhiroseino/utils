@@ -1,9 +1,4 @@
 /**
- * 汎用的なレコードのキー
- */
-export type GenericRecordKey = string | number | symbol;
-
-/**
  * 汎用的なレコード
  */
-export type GenericRecord<V = unknown> = Record<GenericRecordKey, V>;
+export type GenericRecord<V = unknown> = Record<PropertyKey, V>;

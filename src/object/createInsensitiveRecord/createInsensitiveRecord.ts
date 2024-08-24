@@ -2,7 +2,7 @@ import isString from 'lodash/isString';
 import stubTrue from 'lodash/stubTrue';
 import standardize from '../../string/standardize';
 import hasOwnProperty from '../hasOwnProperty';
-import { GenericRecord, GenericRecordKey } from '../types';
+import { GenericRecord } from '../types';
 import { CreateInsensitiveObjectOptions as CreateInsensitiveRecordOptions } from './types';
 
 type InsensitiveRecord<T extends GenericRecord> = T & Record<string, unknown>;
@@ -17,7 +17,7 @@ export default function createInsensitiveRecord<T extends GenericRecord>(
   options: CreateInsensitiveRecordOptions<T> = {},
 ): InsensitiveRecord<T> {
   const { target = {} as T, ownProperty, ...standardizeOptions } = options;
-  const isTargetProperty = ownProperty ? (target: T, key: GenericRecordKey) => hasOwnProperty(target, key) : stubTrue;
+  const isTargetProperty = ownProperty ? (target: T, key: PropertyKey) => hasOwnProperty(target, key) : stubTrue;
   const standardizedObject = {} as GenericRecord;
 
   // オリジナルのキーと標準化されたキーのマッピング
@@ -36,7 +36,7 @@ export default function createInsensitiveRecord<T extends GenericRecord>(
   }
 
   // 標準化されたキーの取得
-  const getKey = <K extends GenericRecordKey>(target: T, key: K) => {
+  const getKey = <K extends PropertyKey>(target: T, key: K) => {
     if (key in target === false && isString(key)) {
       // キーを標準化
       if (key in keyMap) {

@@ -3,7 +3,7 @@ import { IdentifiableProps } from './identifier';
 /**
  * 任意のオブジェクト
  */
-export type AnyObject<V = any> = Record<string | number | symbol, V>;
+export type AnyObject<V = any> = Record<PropertyKey, V>;
 
 /**
  * 任意のオプション
@@ -65,3 +65,11 @@ export type Optional<T, K extends keyof T> = Partial<Pick<T, K>> & Omit<T, K>;
  * 指定のプロパティを必須にするユーティリティ型
  */
 export type Essential<T, K extends keyof T> = Required<Pick<T, K>> & Omit<T, K>;
+
+/**
+ * Oに設定した`as const`の型のキーのユニオン型
+ * Vを指定するとその値が設定されているキーのみのユニオン型
+ */
+export type Keys<O extends Record<PropertyKey, unknown>, V = any> = {
+  [K in keyof O]: O[K] extends V ? K : never;
+}[keyof O];
