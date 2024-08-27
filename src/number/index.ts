@@ -8,6 +8,7 @@ export { default as ensureAccuracy } from './ensureAccuracy';
 export { default as format } from './format';
 export { default as getValidMinMax } from './getValidMinMax';
 export { default as getValidNumber } from './getValidNumber';
+export { default as isPositiveInteger } from './isPositiveInteger';
 export { default as isValidNumber } from './isValidNumber';
 export { default as match } from './match';
 export { default as parse } from './parse';

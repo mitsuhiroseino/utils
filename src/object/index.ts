@@ -1,4 +1,5 @@
 export { default as createInsensitiveRecord } from './createInsensitiveRecord';
+export { default as distribute } from './distribute';
 export { default as flatten } from './flatten';
 export { default as format } from './format';
 export { default as group } from './group';

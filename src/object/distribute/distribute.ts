@@ -7,43 +7,50 @@ import { DistributeConfig, DistributeOptions } from './types';
  * @param config
  * @param options
  */
-export default function distribute(
+export default function distribute<C extends DistributeConfig>(
   object: Record<PropertyKey, unknown>,
-  config: DistributeConfig,
+  config: C,
   options: DistributeOptions = {},
 ) {
   const { ownProperty, cloneValue } = options;
   const has = ownProperty ? (property) => Object.hasOwn(object, property) : (property) => property in object;
   const get = cloneValue ? (property) => cloneDeep(object[property]) : (property) => object[property];
-  const result: { [group: PropertyKey]: { [property: PropertyKey]: unknown } } = {};
+  // 分類結果
+  const result: Record<string, Record<PropertyKey, unknown>> = {};
+  // 対象をrestにコピーし、分類できたものはrestから削除していく
   const rest = { ...object };
-  const restGroups: PropertyKey[] = [];
+  const restGroupKeys: string[] = [];
 
-  for (const group in config) {
-    const groupProperties = (result[group] = {});
-    const properties = config[group];
+  for (const groupKey in config) {
+    const group = (result[groupKey] = {} as any);
+    const properties = config[groupKey];
     if (properties == null) {
-      restGroups.push(group);
+      // 分類できなかったプロパティを設定するグループ
+      restGroupKeys.push(groupKey);
     } else {
+      // 指定のプロパティを対象のグループへ分類
       for (const property in properties) {
         if (has(property)) {
           const value = properties[property];
           if (value === true) {
-            groupProperties[property] = get(property);
+            // 元のプロパティ名でグループへ設定
+            group[property] = get(property);
             delete rest[property];
           } else if (value !== false) {
-            groupProperties[value] = get(property);
+            // 指定のプロパティ名でグループへ設定
+            group[value] = get(property);
             delete rest[property];
           }
         }
       }
     }
   }
-  if (restGroups.length) {
-    for (const group of restGroups) {
-      result[group] = { ...rest };
+  if (restGroupKeys.length) {
+    for (const groupKey of restGroupKeys) {
+      // restの内容をグループへ設定
+      result[groupKey] = { ...rest };
     }
   }
 
-  return result;
+  return result as { [groupKey in keyof C]: { [property: PropertyKey]: unknown } };
 }

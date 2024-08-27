@@ -5,9 +5,7 @@
  *
  * @param group 分類先のグループ
  */
-export type DistributeConfig = {
-  [group: string]: GroupProperties | null;
-};
+export type DistributeConfig = Record<string, GroupProperties | null>;
 
 export type GroupProperties = {
   /**

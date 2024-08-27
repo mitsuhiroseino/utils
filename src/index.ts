@@ -17,4 +17,5 @@ export * as promise from './promise';
 export * as ratio from './ratio';
 export * as spreadsheet from './spreadsheet';
 export * as string from './string';
+export * as tree from './tree';
 export type * from './types';

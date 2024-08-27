@@ -1,4 +1,4 @@
-import { DEFAULT_PROPS, TREE_NODE } from './constans';
+import { DEFAULT_PROPS, TREE_NODE } from './constants';
 import NodeBase from './NodeBase';
 import TreeNode from './TreeNode';
 import { Node, ProxiedItem, ProxyHandlers, TreeOptions } from './types';

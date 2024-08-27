@@ -1,4 +1,4 @@
-import { TREE_NODE } from './constans';
+import { TREE_NODE } from './constants';
 
 /**
  * Treeのオプション

@@ -1,4 +1,4 @@
-import { DEFAULT_PROPS } from './constans';
+import { DEFAULT_PROPS } from './constants';
 import NodeBase from './NodeBase';
 import { ChildNode, Node, ProxiedItem, ProxyHandlers, TreeNodeOptions } from './types';
 
