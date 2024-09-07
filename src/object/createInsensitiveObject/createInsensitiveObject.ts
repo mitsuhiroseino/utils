@@ -8,12 +8,12 @@ import { CreateInsensitiveObjectOptions as CreateInsensitiveRecordOptions } from
 type InsensitiveRecord<T extends GenericRecord> = T & Record<string, unknown>;
 
 /**
- * プロパティの大文字・小文字などを無視したアクセスが可能なレコードを作成する
+ * プロパティの大文字・小文字などを無視したアクセスが可能なオブジェクトを作成する
  * @param target
  * @param options
  * @returns
  */
-export default function createInsensitiveRecord<T extends GenericRecord>(
+export default function createInsensitiveObject<T extends GenericRecord>(
   options: CreateInsensitiveRecordOptions<T> = {},
 ): InsensitiveRecord<T> {
   const { target = {} as T, ownProperty, ...standardizeOptions } = options;

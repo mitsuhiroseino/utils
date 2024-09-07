@@ -23,7 +23,8 @@
     "tsc": "rimraf dist && tsc"
   },
   "dependencies": {
-    "bignumber.js": "^9.1.1",
+    "big.js": "^6.2.1",
+    "bignumber.js": "^9.1.2",
     "date-fns": "^2.29.3",
     "geolib": "^3.3.4",
     "iconv-lite": "^0.6.3",
@@ -44,6 +45,7 @@
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-typescript": "^8.3.2",
+    "@types/big.js": "^6",
     "@types/jest": "^29.5.0",
     "@types/jsesc": "^3",
     "@types/lodash": "^4.14.195",

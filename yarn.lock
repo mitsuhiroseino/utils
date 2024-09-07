@@ -2034,6 +2034,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/big.js@npm:^6":
+  version: 6.2.2
+  resolution: "@types/big.js@npm:6.2.2"
+  checksum: 10c0/8f8472dfc1ef61c492e6841e86f8b9b97e5b024136bf7964e582a6a80ba73d4dbfd6cc23ed3b9d8fea69c7f30834fffd1c88e7fb981811f5c6ca608380b5ad67
+  languageName: node
+  linkType: hard
+
 "@types/estree@npm:*, @types/estree@npm:^1.0.0":
   version: 1.0.5
   resolution: "@types/estree@npm:1.0.5"
@@ -2311,6 +2318,7 @@ __metadata:
     "@rollup/plugin-commonjs": "npm:^24.0.1"
     "@rollup/plugin-node-resolve": "npm:^15.0.2"
     "@rollup/plugin-typescript": "npm:^8.3.2"
+    "@types/big.js": "npm:^6"
     "@types/jest": "npm:^29.5.0"
     "@types/jsesc": "npm:^3"
     "@types/lodash": "npm:^4.14.195"
@@ -2319,7 +2327,8 @@ __metadata:
     "@types/uuid": "npm:^10"
     "@visue/dev": "npm:^0.1.0"
     babel-jest: "npm:^29.5.0"
-    bignumber.js: "npm:^9.1.1"
+    big.js: "npm:^6.2.1"
+    bignumber.js: "npm:^9.1.2"
     date-fns: "npm:^2.29.3"
     eslint: "npm:^9.3.0"
     eslint-config-prettier: "npm:^9.1.0"
@@ -2608,7 +2617,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bignumber.js@npm:^9.1.1":
+"big.js@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "big.js@npm:6.2.1"
+  checksum: 10c0/87734c70e6c668f3bc29d84e99b8a97392debbea258d260419c847039d63251fddb8675019c751ceb54ae6fa5f796c5221c4c08526b316149b14ad78dc0d7db1
+  languageName: node
+  linkType: hard
+
+"bignumber.js@npm:^9.1.2":
   version: 9.1.2
   resolution: "bignumber.js@npm:9.1.2"
   checksum: 10c0/e17786545433f3110b868725c449fa9625366a6e675cd70eb39b60938d6adbd0158cb4b3ad4f306ce817165d37e63f4aa3098ba4110db1d9a3b9f66abfbaf10d
