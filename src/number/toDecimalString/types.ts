@@ -3,31 +3,41 @@ export type ToDecimalStringOptions = {
    * 空文字、null、undefinedの場合に返す値
    * デフォルトは空文字
    */
-  emptyValue?: string;
+  empty?: number | string | null;
 
   /**
    * 数値に変換できない時に返す値
    * デフォルトは空文字
    */
-  nanValue?: string;
+  nan?: number | string | null;
 
   /**
    * 入力可能な最小値
-   * デフォルトはNumber.NEGATIVE_INFINITY
+   * デフォルトは制限なし
    */
-  minValue?: number;
+  min?: number;
 
   /**
    * 入力可能な最大値
-   * デフォルトはNumber.POSITIVE_INFINITY
+   * デフォルトは制限なし
    */
-  maxValue?: number;
+  max?: number;
 
   /**
    * 入力可能な小数点以下の桁数
    * デフォルトは制限なし
    */
   precision?: number;
+
+  /**
+   * 下限を下回った時には下限値を返す
+   */
+  clampToMin?: boolean;
+
+  /**
+   * 上限を上回った時には上限値を返す
+   */
+  clampToMax?: boolean;
 
   /**
    * 入力中の数値に対する処理

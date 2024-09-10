@@ -1,10 +1,30 @@
 import Big from 'big.js';
 import isFinite from 'lodash/isFinite';
+import isNumber from 'lodash/isNumber';
 import { ToDecimalStringOptions } from './types';
 
 const INTERACTIVE_LIMITATION = /^-?\d*\.?\d*$/;
 const INTERACTIVE_VALUE = /^-?\d+\.$/;
 const BATCH_LIMITATION = /^-?\d+(\.\d+)?$/;
+const DEFAULT_PE = Big.PE;
+const DEFAULT_NE = Big.NE;
+const E = 1000;
+
+const toReturnValue = (value: Big | number | string | null | undefined): string | null | undefined => {
+  if (isNumber(value)) {
+    value = new Big(value);
+  }
+  if (value instanceof Big) {
+    Big.PE = E;
+    Big.NE = -E;
+    const returnValue = value.toString();
+    Big.PE = DEFAULT_PE;
+    Big.NE = DEFAULT_NE;
+    return returnValue;
+  } else {
+    return value;
+  }
+};
 
 /**
  * 10進数の文字列に変換する
@@ -13,36 +33,40 @@ const BATCH_LIMITATION = /^-?\d+(\.\d+)?$/;
  * @returns
  */
 export default function toDecimalString(
-  value: string | null | undefined,
+  value: number | string | null | undefined,
   options: ToDecimalStringOptions = {},
 ): string | null | undefined {
   const {
-    emptyValue = '',
-    nanValue = '',
-    minValue = Number.NEGATIVE_INFINITY,
-    maxValue = Number.POSITIVE_INFINITY,
+    empty = '',
+    nan = '',
+    min = Number.NEGATIVE_INFINITY,
+    max = Number.POSITIVE_INFINITY,
     precision,
     interactive = false,
+    clampToMin,
+    clampToMax,
   } = options;
 
   if (value == null || value === '') {
-    return emptyValue;
+    return toReturnValue(empty);
   }
 
-  if (interactive) {
-    if (!INTERACTIVE_LIMITATION.test(value)) {
-      return nanValue;
-    } else if (value === '.' || value === '-') {
-      return value;
-    } else if ((precision == null || precision <= 0) && INTERACTIVE_VALUE.test(value)) {
-      return value;
+  if (!isNumber(value)) {
+    if (interactive) {
+      if (!INTERACTIVE_LIMITATION.test(value)) {
+        return toReturnValue(nan);
+      } else if (value === '.' || value === '-') {
+        return value;
+      } else if ((precision == null || precision <= 0) && INTERACTIVE_VALUE.test(value)) {
+        return value;
+      }
+    } else if (!BATCH_LIMITATION.test(value)) {
+      return toReturnValue(nan);
     }
-  } else if (!BATCH_LIMITATION.test(value)) {
-    return nanValue;
   }
 
   if (isNaN(Number(value))) {
-    return nanValue;
+    return toReturnValue(nan);
   }
 
   let numberValue = new Big(value);
@@ -50,16 +74,24 @@ export default function toDecimalString(
     numberValue = numberValue.round(precision, Big.roundDown);
   }
 
-  const min = Math.min(minValue, maxValue);
-  const max = Math.max(minValue, maxValue);
+  const minValue = Math.min(min, max);
+  const maxValue = Math.max(min, max);
 
-  if (isFinite(min) && numberValue.lt(min)) {
-    return Big(min).toFixed();
+  if (isFinite(minValue) && numberValue.lt(minValue)) {
+    if (clampToMin) {
+      return toReturnValue(minValue);
+    } else {
+      return toReturnValue(nan);
+    }
   }
 
-  if (isFinite(max) && numberValue.gt(max)) {
-    return Big(max).toFixed();
+  if (isFinite(maxValue) && numberValue.gt(maxValue)) {
+    if (clampToMax) {
+      return toReturnValue(maxValue);
+    } else {
+      return toReturnValue(nan);
+    }
   }
 
-  return numberValue.toFixed();
+  return toReturnValue(numberValue);
 }

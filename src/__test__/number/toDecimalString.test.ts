@@ -2,41 +2,45 @@ import toDecimalString from 'src/number/toDecimalString';
 
 const SMALL_VALUE = '-12345678901234567890';
 const HUGE_VALUE = '12345678901234567890';
+const MAX_VALUE =
+  '179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+const MIN_VALUE =
+  '0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005';
 
 describe('toDecimalString', () => {
   describe('batch', () => {
     describe('value=null', () => {
-      test('emptyValue=default', () => {
+      test('empty=default', () => {
         const result = toDecimalString(null);
         expect(result).toBe('');
       });
 
-      test('emptyValue="0"', () => {
-        const result = toDecimalString(null, { emptyValue: '0' });
+      test('empty="0"', () => {
+        const result = toDecimalString(null, { empty: '0' });
         expect(result).toBe('0');
       });
     });
 
     describe('value=undefined', () => {
-      test('emptyValue=default', () => {
+      test('empty=default', () => {
         const result = toDecimalString(undefined);
         expect(result).toBe('');
       });
 
-      test('emptyValue="0"', () => {
-        const result = toDecimalString(undefined, { emptyValue: '0' });
+      test('empty="0"', () => {
+        const result = toDecimalString(undefined, { empty: '0' });
         expect(result).toBe('0');
       });
     });
 
     describe('value=""', () => {
-      test('emptyValue=default', () => {
+      test('empty=default', () => {
         const result = toDecimalString('');
         expect(result).toBe('');
       });
 
-      test('emptyValue="0"', () => {
-        const result = toDecimalString('', { emptyValue: '0' });
+      test('empty="0"', () => {
+        const result = toDecimalString('', { empty: '0' });
         expect(result).toBe('0');
       });
     });
@@ -48,7 +52,7 @@ describe('toDecimalString', () => {
       });
 
       test('nanValue="0"', () => {
-        const result = toDecimalString('a', { nanValue: '0' });
+        const result = toDecimalString('a', { nan: '0' });
         expect(result).toBe('0');
       });
     });
@@ -95,6 +99,48 @@ describe('toDecimalString', () => {
       });
     });
 
+    describe('isNaN(value)=false', () => {
+      test(`value=${Number.MAX_VALUE}`, () => {
+        const result = toDecimalString(Number.MAX_VALUE);
+        expect(result).toBe(MAX_VALUE);
+      });
+
+      test(`value=${Number.MIN_VALUE}`, () => {
+        const result = toDecimalString(Number.MIN_VALUE);
+        expect(result).toBe(MIN_VALUE);
+      });
+
+      test(`value=${-Number.MAX_VALUE}`, () => {
+        const result = toDecimalString(-Number.MAX_VALUE);
+        expect(result).toBe('-' + MAX_VALUE);
+      });
+
+      test(`value=${-Number.MIN_VALUE}`, () => {
+        const result = toDecimalString(-Number.MIN_VALUE);
+        expect(result).toBe('-' + MIN_VALUE);
+      });
+
+      test(`value="${MAX_VALUE}"`, () => {
+        const result = toDecimalString(MAX_VALUE);
+        expect(result).toBe(MAX_VALUE);
+      });
+
+      test(`value="${MIN_VALUE}"`, () => {
+        const result = toDecimalString(MIN_VALUE);
+        expect(result).toBe(MIN_VALUE);
+      });
+
+      test(`value="-${MAX_VALUE}"`, () => {
+        const result = toDecimalString('-' + MAX_VALUE);
+        expect(result).toBe('-' + MAX_VALUE);
+      });
+
+      test(`value="-${MIN_VALUE}"`, () => {
+        const result = toDecimalString('-' + MIN_VALUE);
+        expect(result).toBe('-' + MIN_VALUE);
+      });
+    });
+
     describe(`value="${SMALL_VALUE}"`, () => {
       test('minValue=default', () => {
         const result = toDecimalString(SMALL_VALUE);
@@ -102,7 +148,12 @@ describe('toDecimalString', () => {
       });
 
       test('minValue=0', () => {
-        const result = toDecimalString(SMALL_VALUE, { minValue: 0 });
+        const result = toDecimalString(SMALL_VALUE, { min: 0 });
+        expect(result).toBe('');
+      });
+
+      test('minValue=0&clampToMin', () => {
+        const result = toDecimalString(SMALL_VALUE, { min: 0, clampToMin: true });
         expect(result).toBe('0');
       });
     });
@@ -114,7 +165,12 @@ describe('toDecimalString', () => {
       });
 
       test('maxValue=0', () => {
-        const result = toDecimalString(HUGE_VALUE, { maxValue: 0 });
+        const result = toDecimalString(HUGE_VALUE, { max: 0 });
+        expect(result).toBe('');
+      });
+
+      test('maxValue=0&clampToMax=true', () => {
+        const result = toDecimalString(HUGE_VALUE, { max: 0, clampToMax: true });
         expect(result).toBe('0');
       });
     });
@@ -154,37 +210,42 @@ describe('toDecimalString', () => {
 
   describe('interactive', () => {
     describe('value=null', () => {
-      test('emptyValue=default', () => {
+      test('empty=default', () => {
         const result = toDecimalString(null, { interactive: true });
         expect(result).toBe('');
       });
 
-      test('emptyValue="0"', () => {
-        const result = toDecimalString(null, { interactive: true, emptyValue: '0' });
+      test('empty="0"', () => {
+        const result = toDecimalString(null, { interactive: true, empty: '0' });
+        expect(result).toBe('0');
+      });
+
+      test('empty=0', () => {
+        const result = toDecimalString(null, { interactive: true, empty: 0 });
         expect(result).toBe('0');
       });
     });
 
     describe('value=undefined', () => {
-      test('emptyValue=default', () => {
+      test('empty=default', () => {
         const result = toDecimalString(undefined, { interactive: true });
         expect(result).toBe('');
       });
 
-      test('emptyValue="0"', () => {
-        const result = toDecimalString(undefined, { interactive: true, emptyValue: '0' });
+      test('empty="0"', () => {
+        const result = toDecimalString(undefined, { interactive: true, empty: '0' });
         expect(result).toBe('0');
       });
     });
 
     describe('value=""', () => {
-      test('emptyValue=default', () => {
+      test('empty=default', () => {
         const result = toDecimalString('', { interactive: true });
         expect(result).toBe('');
       });
 
-      test('emptyValue="0"', () => {
-        const result = toDecimalString('', { interactive: true, emptyValue: '0' });
+      test('empty="0"', () => {
+        const result = toDecimalString('', { interactive: true, empty: '0' });
         expect(result).toBe('0');
       });
     });
@@ -196,7 +257,12 @@ describe('toDecimalString', () => {
       });
 
       test('nanValue="0"', () => {
-        const result = toDecimalString('a', { interactive: true, nanValue: '0' });
+        const result = toDecimalString('a', { interactive: true, nan: '0' });
+        expect(result).toBe('0');
+      });
+
+      test('nanValue=0', () => {
+        const result = toDecimalString('a', { interactive: true, nan: 0 });
         expect(result).toBe('0');
       });
     });
@@ -250,8 +316,8 @@ describe('toDecimalString', () => {
       });
 
       test('minValue=0', () => {
-        const result = toDecimalString(SMALL_VALUE, { interactive: true, minValue: 0 });
-        expect(result).toBe('0');
+        const result = toDecimalString(SMALL_VALUE, { interactive: true, min: 0 });
+        expect(result).toBe('');
       });
     });
 
@@ -262,8 +328,8 @@ describe('toDecimalString', () => {
       });
 
       test('maxValue=0', () => {
-        const result = toDecimalString(HUGE_VALUE, { interactive: true, maxValue: 0 });
-        expect(result).toBe('0');
+        const result = toDecimalString(HUGE_VALUE, { interactive: true, max: 0 });
+        expect(result).toBe('');
       });
     });
 
