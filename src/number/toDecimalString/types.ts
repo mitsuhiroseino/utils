@@ -12,16 +12,22 @@ export type ToDecimalStringOptions = {
   nan?: number | string | null;
 
   /**
+   * 最小値～最大値に収まっていない時に返す値
+   * デフォルトは空文字
+   */
+  outOfRange?: number | string | null;
+
+  /**
    * 入力可能な最小値
    * デフォルトは制限なし
    */
-  min?: number;
+  min?: number | string;
 
   /**
    * 入力可能な最大値
    * デフォルトは制限なし
    */
-  max?: number;
+  max?: number | string;
 
   /**
    * 入力可能な小数点以下の桁数

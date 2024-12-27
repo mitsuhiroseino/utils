@@ -67,9 +67,15 @@ export type Optional<T, K extends keyof T> = Partial<Pick<T, K>> & Omit<T, K>;
 export type Essential<T, K extends keyof T> = Required<Pick<T, K>> & Omit<T, K>;
 
 /**
- * Oに設定した`as const`の型のキーのユニオン型
- * Vを指定するとその値が設定されているキーのみのユニオン型
+ * Oに設定したRecord型のキーのユニオン型
+ * Vを指定するとその型が設定されているキーのみのユニオン型
  */
 export type Keys<O extends Record<PropertyKey, unknown>, V = any> = {
   [K in keyof O]: O[K] extends V ? K : never;
 }[keyof O];
+
+/**
+ * Oに設定したRecord型のキーを使用した値がFの型のRecord型
+ * Vを指定するとその型が設定されているキーのみのRecord型
+ */
+export type Flags<O extends Record<PropertyKey, unknown>, V = any, F = boolean> = Record<Keys<O, V>, F>;
